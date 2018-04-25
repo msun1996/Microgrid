@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block custom_css %}
+<style>
+.form{
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 30px;
+    background-color: lavender;
+    border-style: solid;
+    border-width: thin;
+}
+</style>
+{% endblock %}
+{% block title %}
+    微电网登录界面
+{% endblock %}
+{% block nav2 %}{% endblock %}
+{% block content %}
+<div class="container" style="margin-top: 180px;">
+   <form class="col-sm-4 col-sm-offset-4 form form-horizontal " action="{% url 'login' %}" method="post" style="box-shadow: 0px 0px 10px grey;">
+       {% csrf_token %}
+       <h3 class="text-center">管理员登录</h3>
+       <div class="form-group {% if login_form.username.errors %}has-warning{% endif %}{% if msg %}has-error{% endif %}" >
+         <label for="username" class="col-sm-2 control-label">账&nbsp;号</label>
+         <div class="col-sm-9">
+             <input type="text" class="form-control " id="username" name="username">
+         </div>
+       </div>
+       <div class="form-group {% if login_form.username.errors %}has-warning{% endif %}{% if msg %}has-error{% endif %}">
+         <label for="password" class="col-sm-2 control-label">密&nbsp;码</label>
+         <div class="col-sm-9">
+             <input type="password" class="form-control" id="password" name="password">
+         </div>
+       </div>
+       <button type="submit" class="btn btn-success center-block">登录</button>
+       <div class="text-center">
+           <p style="color: red">{{ msg }}</p>
+       </div>
+     </form>
+</div>
+{% endblock %}

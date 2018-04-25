@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}设备管理{% endblock %}
+{% block custom_css %}
+<link href="{% static 'css/mic.css' %}" rel="stylesheet">
+{% endblock %}
+{% block custom_js %}
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="dev-left">
+            <div class="dev-box1">
+                <!-- 多级栏下拉效果 -->
+                <div class="panel-group">
+                    <div class="panel">
+                        <div class="panel-heading" >
+                            <a class="list-group-item list-group-item-info" data-toggle="collapse" href="#collapse" style="font-weight: bold">电站管理</a>
+                        </div>
+                        <div id="collapse" class="panel-collapse collapse in">
+                            {% for area_a in message_all %}
+                                <div class="list-group-item" >
+                                    <a href="#" style="text-decoration: none;color: black;font-weight: bold">{{ area_a.1 }}</a>
+                                    <a data-toggle="collapse" href="#collapse{{ area_a.0 }}" title="收放" style="float: right"><span class="glyphicon glyphicon-resize-vertical">&nbsp;</span></a>
+                                    <a href="{% url 'dev_add' %}?area_a={{ area_a.0 }}&num=&type=1" title="添加子项" style="float: right" ><span class="glyphicon glyphicon-plus-sign">&nbsp;</span></a>
+                                </div>
+                                <div id="collapse{{ area_a.0 }}" class="panel-collapse collapse">
+                                    <!-- 二级目录 -->
+                                    {% for area in area_a.2  %}
+                                        <div class="list-group-item " >
+                                            <a href="#" style="text-decoration: none;color: black " id="{{ area.0 }}" >&nbsp;&nbsp;{{ area.1 }}({{ area.0 }})</a>
+                                            <a data-toggle="collapse" href="#collapse{{ area.0 }}" title="收放" style="float: right"><span class="glyphicon glyphicon-resize-vertical">&nbsp;</span></a>
+                                            <a href="{% url 'dev_add' %}?area_a={{ area_a.0 }}&num={{ area.0 }}&type=2" title="添加子项" style="float: right"><span class="glyphicon glyphicon-plus-sign">&nbsp;</span></a>
+                                            <a href="{% url 'dev_del' %}?num={{ area.0 }}" title="删除" style="float: right" onclick="return confirm('确认删除该区域/设备及其子项和控制项?')"><span class="glyphicon glyphicon-minus-sign">&nbsp;</span></a>
+                                        </div>
+                                        <div id="collapse{{ area.0 }}" class="panel-collapse collapse">
+                                            <!-- 三级目录 -->
+                                            {% for group in area.2  %}
+                                                <div class="list-group-item " >
+                                                    <a href="#" style="text-decoration: none;color: darkgreen" id="{{ group.0 }}">&nbsp;&nbsp;&nbsp;&nbsp; {{ group.1 }}({{ group.0 }})</a>
+                                                    <a data-toggle="collapse" href="#collapse{{ group.0 }}" title="收放" style="float: right"><span class="glyphicon glyphicon-resize-vertical">&nbsp;</span></a>
+                                                    <a href="{% url 'dev_add' %}?area_a={{ area_a.0 }}&num={{ group.0 }}&type=3" title="添加子项" style="float: right"><span class="glyphicon glyphicon-plus-sign">&nbsp;</span></a>
+                                                    <a href="{% url 'dev_del' %}?num={{ group.0 }}" title="删除" style="float: right" onclick="return confirm('确认删除该设备及其子项及控制项?')"><span class="glyphicon glyphicon-minus-sign">&nbsp;</span></a>
+                                                </div>
+                                                <div id="collapse{{ group.0 }}" class="panel-collapse collapse">
+                                                    <!-- 四级目录 -->
+                                                    {% for dev in group.2 %}
+                                                        <div class="list-group-item">
+                                                            <a href="#" style="text-decoration: none;" id="{{ dev.0 }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ dev.1 }}({{ dev.0 }})</a>
+                                                            <a href="{% url 'dev_del' %}?num={{ dev.0 }}" title="删除" style="float: right" onclick="return confirm('确认删除该设备及控制项?')"><span class="glyphicon glyphicon-minus-sign">&nbsp;</span></a>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dev-middle">
+            <div class="dev-box2">
+
+            </div>
+        </div>
+        <div class="dev-right">
+            <div class="dev-box3">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

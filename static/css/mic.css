@@ -1,0 +1,49 @@
+.over-left{
+    width: 30%;height: auto;float: left;
+}
+.over-middle{
+    width: 70%;height: auto;float: left;
+}
+.over-box1{
+    width: 95%;
+    min-height: 500px;
+    box-shadow: 0 0 10px grey;
+}
+.over-box2{
+    width: 100%;
+    min-height: 200px;
+    box-shadow: 0 0 10px grey;
+}
+.over-box3{
+    width: 100%;
+    min-height: 500px;
+    box-shadow: 0 0 10px grey;
+    margin-top: 30px;
+}
+.dev-left{
+    width: 25%;height: auto;float: left;
+}
+.dev-middle{
+    width: 60%;height: auto;float: left;
+}
+.dev-right{
+    width: 15%;height: auto;float: right;
+}
+.dev-box1{
+    width: 90%;
+    min-height: 400px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px grey;
+}
+.dev-box2{
+    width: 100%;
+    min-height: 400px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px grey;
+}
+.dev-box3{
+    width: 90%;
+    min-height: 400px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px grey;
+}
