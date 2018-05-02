@@ -6,44 +6,76 @@
 }
 .over-box1{
     width: 95%;
-    min-height: 500px;
-    box-shadow: 0 0 10px grey;
+    min-height: 580px;
+    box-shadow: 0 0 5px #1bee57;
 }
 .over-box2{
     width: 100%;
-    min-height: 200px;
-    box-shadow: 0 0 10px grey;
+    min-height: 160px;
+    box-shadow: 0 0 5px #1bee57;
+}
+.over-box2 .one{
+    height: 40px;
+    text-align: center;
+}
+.over-box2 .two{
+    float: left;
+    width: 50%;
+    height: 40px;
+}
+.over-box2 .three{
+    float: left;
+    width: 25%;
+    height: 80px;
 }
 .over-box3{
     width: 100%;
-    min-height: 500px;
-    box-shadow: 0 0 10px grey;
-    margin-top: 30px;
+    min-height: 400px;
+    box-shadow: 0 0 5px #1bee57;
+    margin-top: 20px;
 }
 .dev-left{
     width: 25%;height: auto;float: left;
 }
 .dev-middle{
-    width: 60%;height: auto;float: left;
+    width: 50%;height: auto;float: left;
 }
 .dev-right{
-    width: 15%;height: auto;float: right;
+    width: 25%;height: auto;float: right;
 }
 .dev-box1{
     width: 90%;
-    min-height: 400px;
+    height: 580px;
     margin: 0 auto;
-    box-shadow: 0 0 10px grey;
+    box-shadow: 0 0 5px #1bee57;
+    overflow-y: scroll;
 }
 .dev-box2{
     width: 100%;
-    min-height: 400px;
+    height: 580px;
     margin: 0 auto;
-    box-shadow: 0 0 10px grey;
+    box-shadow: 0 0 5px #1bee57;
+    overflow-y: scroll;
+}
+::-webkit-scrollbar{
+    width: 5px;
+    background-color: #F5F5F5;
+}
+::-webkit-scrollbar-thumb
+{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: greenyellow;
+}
+.dev-box2 p{
+    font-size:5px;
+    text-align: center;
+    margin-bottom: 0;
 }
 .dev-box3{
     width: 90%;
-    min-height: 400px;
+    min-height: 0px;
+    padding-bottom: 5px;
     margin: 0 auto;
-    box-shadow: 0 0 10px grey;
+    box-shadow: 0 0 5px #1bee57;
 }

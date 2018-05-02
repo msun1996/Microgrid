@@ -15,17 +15,25 @@ Including another URLconf
 """
 from django.conf.urls import url
 import xadmin
+from Microgrid.settings import MEDIA_ROOT
+from django.views.static import serve
 
 from users.views import LoginView, LogoutView
-from microgrids.views import OverviewView,DeviceManageView,DeviceAddView,DeviceDelView
+from microgrids.views import OverviewView,DeviceManageView,DeviceAddView,DeviceDelView,DeviceAskView
 
 urlpatterns = [
     url(r'^$', LoginView.as_view()),
     url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^logout/$', LogoutView.as_view(), name='logout'),
+    # 总览
     url(r'^overview/$', OverviewView.as_view(), name='overview'),
+    # 设备管理
     url(r'^device_manage/$', DeviceManageView.as_view(), name='device'),
+    # 左侧栏设备添加删除管理
     url(r'^dev_add/$', DeviceAddView.as_view(), name='dev_add'),
     url(r'^dev_del/$', DeviceDelView.as_view(), name='dev_del'),
+    # 设备请求(区域设备控制或详情)
+    url(r'^dev_ask/$', DeviceAskView.as_view(), name='dev_ask'),
+    url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
     url(r'^xadmin/', xadmin.site.urls)
 ]
