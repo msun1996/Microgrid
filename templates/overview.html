@@ -10,21 +10,41 @@
     <div class="container">
         <div class="over-left">
             <div class="over-box1">
-
+                <div style="text-align: center;background-color: lawngreen;color: whitesmoke;padding-bottom: 5px">
+                    <span style="font-size: 20px;">电站天气概览</span>
+                </div>
+                <!-- 天气js插件https://www.seniverse.com/widget/more -->
+                <div style="text-align: center;background-color: lightskyblue;">
+                    <iframe src="//www.seniverse.com/weather/weather.aspx?uid=U588980A9D&cid=CHSN000000&l=zh-CHS&p=SMART&a=0&u=C&s=1&m=0&x=1&d=3&fc=FFFFFF&bgc=&bc=&ti=0&in=0&li=" frameborder="0" scrolling="no" width="100%" height="180" allowTransparency="true"></iframe>
+                </div>
             </div>
         </div>
         <div class="over-middle">
-            <div class="over-box2" style="text-align: center">
-                <div class="one"><span>能源产出总览</span></div>
-                <div>
-                    <div class="two"><span>能源总产出</span></div>
-                    <div class="two"><span>能源总输入</span></div>
+            <div class="over-box2">
+                <div class="one">
+                    <span style="font-size: 20px;">能源产出总览</span>
                 </div>
                 <div>
-                    <div class="three" style="border-right: 1px lawngreen solid;"><span>今日</span></div>
-                    <div class="three" style="border-right: 1px lawngreen solid;"><span>累积</span></div>
-                    <div class="three" style="border-right: 1px lawngreen solid;"><span>今日</span></div>
-                    <div class="three"><span>累积</span></div>
+                    <div class="two"><img class="picture" src="{% static 'img/output.jpg' %}">&nbsp;<span style="font-size: 18px">能源总产出</span></div>
+                    <div class="two"><img class="picture" src="{% static 'img/money.png' %}">&nbsp;<span  style="font-size: 18px">能源总收益</span></div>
+                </div>
+                <div>
+                    <div class="three" style="border-right: 1px lawngreen solid;">
+                        <span>今日</span>
+                        <div>111kwh</div>
+                    </div>
+                    <div class="three" style="border-right: 1px lawngreen solid;">
+                        <span>累积</span>
+                        <div>111kwh</div>
+                    </div>
+                    <div class="three" style="border-right: 1px lawngreen solid;">
+                        <span>今日</span>
+                        <div>111元</div>
+                    </div>
+                    <div class="three">
+                        <span>累积</span>
+                        <div>111元</div>
+                    </div>
                 </div>
             </div>
             <div class="over-box3">

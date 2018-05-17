@@ -1,10 +1,13 @@
 # -*- coding:utf8 -*-
+import datetime
+import json
+
 from django.shortcuts import render,HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic.base import View
 
-from microgrids.models import WebMicrogrid,DevControl,EnvAddressC,Img
+from microgrids.models import WebMicrogrid,DevControl,EnvAddressC,Img,PVDigitalQuantityData,PVAnalogQuantityData1,PVAnalogQuantityData2
 
 # Create your views here.
 
@@ -25,7 +28,11 @@ class OverviewView(View):
 class DeviceManageView(View):
     def get(self, request):
         # 获取右侧栏需要显示的对应控制区内容的编号
-        control_num = request.GET.get('control_num', '')
+        ask_dev = request.GET.get('ask_dev', '')
+        try:
+            dev = WebMicrogrid.objects.get(num=ask_dev)
+        except:
+            dev = ''
         # 导航栏选择标志
         nav = 2
 
@@ -67,6 +74,34 @@ class DeviceManageView(View):
         battery_picture = Img.objects.get(name_h='蓄电池组')
         CA_Close_picture = Img.objects.get(name_h='控制区_闭合')
         CA_Open_picture = Img.objects.get(name_h='控制区_断开')
+
+        # 间隔区
+        pcc_model = []
+        pccs = WebMicrogrid.objects.order_by('num').filter(area_type=message[0][0], type=1).values_list('num')
+        for pcc in pccs:
+            # 获取对应控制区区号
+            pcc_2 = []
+            try:
+                # 获取对应控制区
+                pccc = WebMicrogrid.objects.order_by('num').filter(control_belong__num=pcc[0]).values_list('num')[0][0]
+                # 获取对应控制区状态
+                pcc_sws = WebMicrogrid.objects.filter(parent_area=pccc)
+                # 默认闭合
+                pcc_status = 2
+                for pcc_sw in pcc_sws:  # 控制区可能有多个开关时判断
+                    pcc_sw_status = DevControl.objects.get(num=pcc_sw).switch_status
+                    if pcc_sw_status == 1:
+                        # 控制区有一个断开，则显示控制区断开
+                        pcc_status = 1
+            except:
+                pccc = ''
+                pcc_status = ''
+            pcc_2.append(pcc[0])
+            pcc_2.append(pccc)
+            pcc_2.append(pcc_status)
+            pcc_model.append(pcc_2)
+        print(pcc_model)
+
         # 光伏模型区
         pv_model = []
         # 获取光伏下的所有控制子区
@@ -149,13 +184,14 @@ class DeviceManageView(View):
         print(pv_model)
 
         # 右侧栏设备控制管理栏
+        # 处于控制区的开关部分处理
         swcs = []
-        if control_num != '':
+        if ask_dev != ''and dev.area_type == 6:
             # 首位为控制编号
-            swcs.append(control_num)
+            swcs.append(ask_dev)
             swcs.append([])
             # 获取对应编号的对象
-            control_obj = WebMicrogrid.objects.get(num=control_num)
+            control_obj = WebMicrogrid.objects.get(num=ask_dev)
             # 如果对象为子区
             if control_obj.type == 1:
                 # 获取子区对象下所有的控制开关
@@ -167,9 +203,23 @@ class DeviceManageView(View):
                 swc = DevControl.objects.filter(num=control_obj.num).values_list('num', 'switch_status')
                 swcs[1].append(swc)
         print(swcs)
+        # 设备上的参数设定等管理
+        # 光伏设备
+        pvI_set = ''
+        pvI_monitor = ''
+        pvI_data = ''
+        pvI_datas = ''
+        pvI_times = []
+        if ask_dev != '' and dev.area_type == 1:
+            # 光伏逆变器
+            if dev.type == 2:
+                # 参数设定(控制管理区所需参数)
+                pvI_set = DevControl.objects.get(num=ask_dev)
+
         return render(request, 'device_manage.html', {
             'nav':nav,
             'message_left': message_left,
+            'pcc_model':pcc_model,
             'pv_model':pv_model,
             'big_power_grid_picture': big_power_grid_picture,
             'pvI_picture': pvI_picture,
@@ -178,7 +228,44 @@ class DeviceManageView(View):
             'battery_picture': battery_picture,
             'CA_Close_picture':CA_Close_picture,
             'CA_Open_picture':CA_Open_picture,
-            'swcs': swcs
+            'swcs': swcs,
+            'pvI_set': pvI_set,
+        })
+
+
+# 设备详情
+class DeviceInfoView(View):
+    def get(self, request):
+        num = request.GET.get('num', '')
+        today = datetime.datetime.now().strftime('%Y-%m-%d')
+        day = request.GET.get('day', today)
+        print(day)
+        day_l = day.split('-')
+        # 监控信息获取
+        pvI_monitor = PVDigitalQuantityData.objects.get(pv_num=num)
+        # 数据信息(最新)
+        pvI_data2 = PVAnalogQuantityData2.objects.filter(pv_num=num).order_by('-timestamp').first()
+        # 波形显示
+        # 获取对应编号指定日期数据
+        pvI_datas2 = PVAnalogQuantityData2.objects.filter(pv_num=num).filter(timestamp__year=day_l[0],timestamp__month=day_l[1],timestamp__day=day_l[2])
+        # 获取指定日期功率数据
+        pvI_on_grid_p_data_l = []
+        pvI_on_grid_p_datas = pvI_datas2.values_list('on_grid_p')
+        for pvI_on_grid_p_data in pvI_on_grid_p_datas:
+            pvI_on_grid_p_data_l.append(pvI_on_grid_p_data[0])
+        times = pvI_datas2.values_list('timestamp')
+        time_l = []
+        for time in times:
+            time_l.append(time[0].strftime('%H:%M:%S'))
+        print(time_l)
+        return render(request, 'dev_info.html', {
+            'num': num,
+            'pvI_monitor': pvI_monitor,
+            'pvI_data2': pvI_data2,
+            'day': day,
+            # 光伏逆变器功率数据
+            'pvI_on_grid_p_data_l':json.dumps(pvI_on_grid_p_data_l),
+            'time_l':json.dumps(time_l)
         })
 
 
@@ -343,27 +430,23 @@ class DeviceDelView(View):
         return HttpResponseRedirect(reverse('device'))
 
 
-# 设备请求控制或查看详情处理
+# 控制区开关请求控制处理
 class DeviceAskView(View):
-    def get(self, request):
-        ask_dev = request.GET.get('ask_dev','')
-        # 获取设备信息
-        dev = WebMicrogrid.objects.get(num=ask_dev)
-
-        # 控制区处理(返回请求所需的控制开关编号及状态)
-        if dev.area_type == 6:
-            # 如果是控制区,交给manage处理
-            control_num = dev.num
-            return HttpResponseRedirect('/device_manage/?control_num={0}'.format(control_num))
-
     def post(self, request):
-        control_num = request.POST.get('control_num','')
-        print(control_num)
-        sw_num = request.POST.get('sw_num', '')
-        sw_status = request.POST.get('sw_status', '')
-        # 获取对应开关并设置状态
-        sw = DevControl.objects.get(num=sw_num)
-        sw.switch_status = sw_status
-        sw.save()
+        ask_dev = request.POST.get('ask_dev','')
+        print(ask_dev)
+        num = request.POST.get('num', '')
+        switch_status = request.POST.get('switch_status', '')
+        active_power = request.POST.get('active_power', 0)
+        reactive_power = request.POST.get('reactive_power', 0)
+        powerfactor = request.POST.get('powerfactor', 0)
 
-        return HttpResponseRedirect('/device_manage/?control_num={0}'.format(control_num))
+        # 获取对应开关并设置状态
+        dev = DevControl.objects.get(num=num)
+        dev.switch_status = switch_status
+        dev.active_power = float(active_power)
+        dev.reactive_power = float(reactive_power)
+        dev.powerfactor = float(powerfactor)
+        dev.save()
+
+        return HttpResponseRedirect('/device_manage/?ask_dev={0}'.format(ask_dev))

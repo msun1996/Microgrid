@@ -2,7 +2,7 @@
 
 import xadmin
 
-from microgrids.models import DevControl,EnvAddressC,PVAnalogQuantityData,PVDigitalQuantityData,EnvironmentData,WebMicrogrid,Img
+from microgrids.models import DevControl,EnvAddressC,PVAnalogQuantityData1,PVAnalogQuantityData2,PVDigitalQuantityData,EnvironmentData,WebMicrogrid,Img
 
 
 # 本地主要管理上传数据
@@ -24,7 +24,13 @@ class PVDigitalQuantityDataAdmin(object):
     list_filter = ['pv_num']
 
 
-class PVAnalogQuantityDataAdmin(object):
+class PVAnalogQuantityData1Admin(object):
+    list_display = ['pv_num']
+    search_fields = ['pv_num']
+    list_filter = ['pv_num']
+
+
+class PVAnalogQuantityData2Admin(object):
     list_display = ['pv_num']
     search_fields = ['pv_num']
     list_filter = ['pv_num']
@@ -51,7 +57,8 @@ class ImgAdmin(object):
 
 xadmin.site.register(DevControl, DevControlAdmin)
 xadmin.site.register(EnvAddressC, EnvAddressCAdmin)
-xadmin.site.register(PVAnalogQuantityData, PVAnalogQuantityDataAdmin)
+xadmin.site.register(PVAnalogQuantityData1, PVAnalogQuantityData1Admin)
+xadmin.site.register(PVAnalogQuantityData2, PVAnalogQuantityData2Admin)
 xadmin.site.register(PVDigitalQuantityData, PVDigitalQuantityDataAdmin)
 xadmin.site.register(EnvironmentData, EnvAdressDataAdmin)
 xadmin.site.register(WebMicrogrid, WebMicrogridAdmin)

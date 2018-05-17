@@ -19,7 +19,7 @@ from Microgrid.settings import MEDIA_ROOT
 from django.views.static import serve
 
 from users.views import LoginView, LogoutView
-from microgrids.views import OverviewView,DeviceManageView,DeviceAddView,DeviceDelView,DeviceAskView
+from microgrids.views import OverviewView,DeviceManageView,DeviceAddView,DeviceDelView,DeviceAskView,DeviceInfoView
 
 urlpatterns = [
     url(r'^$', LoginView.as_view()),
@@ -32,8 +32,11 @@ urlpatterns = [
     # 左侧栏设备添加删除管理
     url(r'^dev_add/$', DeviceAddView.as_view(), name='dev_add'),
     url(r'^dev_del/$', DeviceDelView.as_view(), name='dev_del'),
-    # 设备请求(区域设备控制或详情)
+    # 设备请求(区域设备控制)
     url(r'^dev_ask/$', DeviceAskView.as_view(), name='dev_ask'),
+    # 设备详情(波形和报警信息)
+    url(r'^dev_info/$', DeviceInfoView.as_view(), name='dev_info'),
+
     url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
     url(r'^xadmin/', xadmin.site.urls)
 ]
