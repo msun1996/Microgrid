@@ -187,8 +187,8 @@
                                 <input type="hidden" value="{{ sw.0.0 }}" name="num">
                                 <div class="col-sm-4">
                                     <select class="form-control col-sm-4" name="switch_status">
-                                        <option value="1" {% if sw.0.1 == 1 %}selected{% endif %}>断开</option>
-                                        <option value="2" {% if sw.0.1 == 2 %}selected{% endif %}>闭合</option>
+                                        <option value="0" {% if sw.0.1 == 0 %}selected{% endif %}>断开</option>
+                                        <option value="1" {% if sw.0.1 == 1 %}selected{% endif %}>闭合</option>
                                     </select>
                                 </div>
                                 <input type="hidden" value="{{ swcs.0 }}" name="ask_dev">
@@ -212,8 +212,8 @@
                                 <label class="control-label col-sm-6">状态控制:</label>
                                 <div class="col-sm-4">
                                     <select class="form-control col-sm-4" name="switch_status">
-                                        <option value="1" {% if pvI_set.switch_status == 1 %}selected{% endif %}>断开</option>
-                                        <option value="2" {% if pvI_set.switch_status == 2 %}selected{% endif %}>闭合</option>
+                                        <option value="0" {% if pvI_set.switch_status == 0 %}selected{% endif %}>断开</option>
+                                        <option value="1" {% if pvI_set.switch_status == 1 %}selected{% endif %}>闭合</option>
                                     </select>
                                 </div>
                             </div>

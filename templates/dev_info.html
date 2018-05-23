@@ -130,13 +130,16 @@
                     <div class="col-sm-12">
                         <label class="control-label col-sm-2">状态：</label>
                         <label class="control-label col-sm-2">
-                            {% if pvI_monitor.status == 1 %}
+                            {% if pvI_monitor.status_down == 0 %}
                                 停机
-                            {% elif pvI_monitor.status == 2 %}
+                            {% endif %}
+                            {% if pvI_monitor.status == 0 %}
                                 待机
-                            {% elif pvI_monitor.status == 3 %}
+                            {% endif %}
+                            {% if pvI_monitor.status == 0 %}
                                 自检
-                            {% elif pvI_monitor.status == 4 %}
+                            {% endif %}
+                            {% if pvI_monitor.status == 0 %}
                                 并网
                             {% endif %}
                         </label>
@@ -144,9 +147,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">闭锁未自锁：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.locking_self == 1 %}
+                            {% if pvI_monitor.locking_self == 0 %}
                                 是
-                            {% elif pvI_monitor.locking_self == 2 %}
+                            {% elif pvI_monitor.locking_self == 1 %}
                                 否
                             {% endif %}
                         </label>
@@ -154,9 +157,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-7">急停：</label>
                         <label class="control-label col-sm-5">
-                            {% if pvI_monitor.emergency_stop == 1 %}
+                            {% if pvI_monitor.emergency_stop == 0 %}
                                 启动
-                            {% elif pvI_monitor.emergency_stop == 2 %}
+                            {% elif pvI_monitor.emergency_stop == 1 %}
                                 未启动
                             {% endif %}
                         </label>
@@ -164,9 +167,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">远程本地：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.remote_local == 1 %}
+                            {% if pvI_monitor.remote_local == 0 %}
                                 是
-                            {% elif pvI_monitor.remote_local == 2 %}
+                            {% elif pvI_monitor.remote_local == 1 %}
                                 否
                             {% endif %}
                         </label>
@@ -174,9 +177,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">PV反接：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.PV_reverse_connection == 1 %}
+                            {% if pvI_monitor.PV_reverse_connection == 0 %}
                                 是
-                            {% elif pvI_monitor.PV_reverse_connection == 2 %}
+                            {% elif pvI_monitor.PV_reverse_connection == 1 %}
                                 否
                             {% endif %}
                         </label>
@@ -184,7 +187,7 @@
                     <div class="col-sm-8">
                         <label class="control-label col-sm-5">PV对地绝缘阻抗：</label>
                         <label class="control-label col-sm-2">
-                            {% if pvI_monitor.PV_insulation_resistance == 1 %}
+                            {% if pvI_monitor.PV_insulation_resistance == 0 %}
                                 <span style="color: green">正常</span>
                             {% elif pvI_monitor.PV_insulation_resistance == 2 %}
                                 <span style="color: red">异常</span>
@@ -194,9 +197,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">直流过压：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.DC_overvoltage == 1 %}
+                            {% if pvI_monitor.DC_overvoltage == 0 %}
                                 <span style="color: green">正常</span>
-                            {% elif pvI_monitor.DC_overvoltage == 2 %}
+                            {% elif pvI_monitor.DC_overvoltage == 1 %}
                                 <span style="color: red">异常</span>
                             {% endif %}
                         </label>
@@ -204,9 +207,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">电网电压：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.power_voltage == 1 %}
+                            {% if pvI_monitor.power_voltage == 0 %}
                                 <span style="color: green">正常</span>
-                            {% elif pvI_monitor.power_voltage == 2 %}
+                            {% elif pvI_monitor.power_voltage == 1 %}
                                <span style="color: red">异常</span>
                             {% endif %}
                         </label>
@@ -214,9 +217,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">电网频率：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.grid_frequency == 1 %}
+                            {% if pvI_monitor.grid_frequency == 0 %}
                                 <span style="color: green">正常</span>
-                            {% elif pvI_monitor.grid_frequency == 2 %}
+                            {% elif pvI_monitor.grid_frequency == 1 %}
                                <span style="color: red">异常</span>
                             {% endif %}
                         </label>
@@ -224,9 +227,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">电网反序：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.grid_reverse_order == 1 %}
+                            {% if pvI_monitor.grid_reverse_order == 0 %}
                                 是
-                            {% elif pvI_monitor.grid_reverse_order == 2 %}
+                            {% elif pvI_monitor.grid_reverse_order == 1 %}
                                 否
                             {% endif %}
                         </label>
@@ -234,9 +237,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">逆变器过载：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.inverter_overload == 1 %}
+                            {% if pvI_monitor.inverter_overload == 0 %}
                                 <span style="color: green">正常</span>
-                            {% elif pvI_monitor.inverter_overload == 2 %}
+                            {% elif pvI_monitor.inverter_overload == 1 %}
                                <span style="color: red">异常</span>
                             {% endif %}
                         </label>
@@ -244,9 +247,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">逆变器过热：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.inverter_overheating == 1 %}
+                            {% if pvI_monitor.inverter_overheating == 0 %}
                                 <span style="color: green">正常</span>
-                            {% elif pvI_monitor.inverter_overheating == 2 %}
+                            {% elif pvI_monitor.inverter_overheating == 1 %}
                                <span style="color: red">异常</span>
                             {% endif %}
                         </label>
@@ -254,9 +257,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">逆变器短路：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.inverter_short_circuit == 1 %}
+                            {% if pvI_monitor.inverter_short_circuit == 0 %}
                                 <span style="color: green">正常</span>
-                            {% elif pvI_monitor.inverter_short_circuit == 2 %}
+                            {% elif pvI_monitor.inverter_short_circuit == 1 %}
                                <span style="color: red">异常</span>
                             {% endif %}
                         </label>
@@ -264,9 +267,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">烟雾报警：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.smoke_alarm == 1 %}
+                            {% if pvI_monitor.smoke_alarm == 0 %}
                                 <span style="color: green">正常</span>
-                            {% elif pvI_monitor.smoke_alarm == 2 %}
+                            {% elif pvI_monitor.smoke_alarm == 1 %}
                                <span style="color: red">异常</span>
                             {% endif %}
                         </label>
@@ -274,9 +277,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">环境温度过热：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.ambient_temperature_overheating == 1 %}
+                            {% if pvI_monitor.ambient_temperature_overheating == 0 %}
                                 <span style="color: green">正常</span>
-                            {% elif pvI_monitor.ambient_temperature_overheating == 2 %}
+                            {% elif pvI_monitor.ambient_temperature_overheating == 1 %}
                                <span style="color: red">异常</span>
                             {% endif %}
                         </label>
@@ -284,9 +287,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">夜间无功补偿：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.reactive_power_compensation == 1 %}
+                            {% if pvI_monitor.reactive_power_compensation == 0 %}
                                 是
-                            {% elif pvI_monitor.reactive_power_compensation == 2 %}
+                            {% elif pvI_monitor.reactive_power_compensation == 1 %}
                                 否
                             {% endif %}
                         </label>
@@ -294,9 +297,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">直流防雷故障：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.DC_lightning_protection == 1 %}
+                            {% if pvI_monitor.DC_lightning_protection == 0 %}
                                 <span style="color: green">正常</span>
-                            {% elif pvI_monitor.DC_lightning_protection == 2 %}
+                            {% elif pvI_monitor.DC_lightning_protection == 1 %}
                                <span style="color: red">异常</span>
                             {% endif %}
                         </label>
@@ -304,9 +307,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">交流防雷故障：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.AC_lightning_protection == 1 %}
+                            {% if pvI_monitor.AC_lightning_protection == 0 %}
                                 <span style="color: green">正常</span>
-                            {% elif pvI_monitor.AC_lightning_protection == 2 %}
+                            {% elif pvI_monitor.AC_lightning_protection == 1 %}
                                <span style="color: red">异常</span>
                             {% endif %}
                         </label>
@@ -314,9 +317,9 @@
                     <div class="col-sm-4">
                         <label class="control-label col-sm-8">孤岛保护：</label>
                         <label class="control-label col-sm-4">
-                            {% if pvI_monitor.island_protection == 1 %}
+                            {% if pvI_monitor.island_protection == 0 %}
                                 启动
-                            {% elif pvI_monitor.island_protection == 2 %}
+                            {% elif pvI_monitor.island_protection == 1 %}
                                 未启动
                             {% endif %}
                         </label>

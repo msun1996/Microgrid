@@ -87,12 +87,12 @@ class DeviceManageView(View):
                 # 获取对应控制区状态
                 pcc_sws = WebMicrogrid.objects.filter(parent_area=pccc)
                 # 默认闭合
-                pcc_status = 2
+                pcc_status = 1
                 for pcc_sw in pcc_sws:  # 控制区可能有多个开关时判断
                     pcc_sw_status = DevControl.objects.get(num=pcc_sw).switch_status
                     if pcc_sw_status == 1:
                         # 控制区有一个断开，则显示控制区断开
-                        pcc_status = 1
+                        pcc_status = 0
             except:
                 pccc = ''
                 pcc_status = ''
@@ -115,12 +115,12 @@ class DeviceManageView(View):
                 # 获取控制区状态
                 pac_sws = WebMicrogrid.objects.filter(parent_area=pac)
                 # 默认闭合
-                pac_status = 2
+                pac_status = 1
                 for pac_sw in pac_sws:
                     pac_sw_status = DevControl.objects.get(num=pac_sw).switch_status
                     if pac_sw_status == 1:
                         # 控制区有一个断开，则显示控制区断开
-                        pac_status = 1
+                        pac_status = 0
             except:
                 pac = ''
                 pac_status = ''
@@ -140,12 +140,12 @@ class DeviceManageView(View):
                     # 获取控制区状态
                     pvIc_sws = WebMicrogrid.objects.filter(parent_area=pvIc)
                     # 默认闭合
-                    pvIc_status = 2
+                    pvIc_status = 1
                     for pvIc_sw in pvIc_sws:
                         pvIc_sw_status = DevControl.objects.get(num=pvIc_sw).switch_status
                         if pvIc_sw_status == 1:
                             # 控制区有一个断开，则显示控制区断开
-                            pvIc_status = 1
+                            pvIc_status = 0
                 except:
                     pvIc = ''
                     pvIc_status = ''
@@ -165,12 +165,12 @@ class DeviceManageView(View):
                         # 获取控制区状态
                         pvc_sws = WebMicrogrid.objects.filter(parent_area=pvc)
                         # 默认闭合
-                        pvc_status = 2
+                        pvc_status = 1
                         for pvc_sw in pvc_sws:
                             pvc_sw_status = DevControl.objects.get(num=pvc_sw).switch_status
                             if pvc_sw_status == 1:
                                 # 控制区有一个断开，则显示控制区断开
-                                pvc_status = 1
+                                pvc_status = 0
                     except:
                         pvc = ''
                         pvc_status = ''
@@ -319,14 +319,14 @@ class DeviceAddView(View):
             # 如果是风力区组级(风力逆变器)
             if area_a == '2' and type == '2':
                 num_h = '风力逆变器'
-                devs = DevControl.objects.filter().values_list('num')
+                devs = DevControl.objects.filter(dev_type=3).values_list('num')
                 for dev in devs:
                     if dev[0] not in nums:
                         num.append(dev[0])
             # 如果是风力设备(风机)
             if area_a == '2' and type == '3':
                 num_h = '风机'
-                devs = DevControl.objects.filter().values_list('num')
+                devs = DevControl.objects.filter(dev_type=4).values_list('num')
                 for dev in devs:
                     if dev[0] not in nums:
                         num.append(dev[0])
@@ -334,14 +334,14 @@ class DeviceAddView(View):
             # 如果是燃机区组级(燃机逆变器)
             if area_a == '3' and type == '2':
                 num_h = '燃机逆变器'
-                devs = DevControl.objects.filter().values_list('num')
+                devs = DevControl.objects.filter(dev_type=5).values_list('num')
                 for dev in devs:
                     if dev[0] not in nums:
                         num.append(dev[0])
             # 如果是燃机设备(燃料电池)
             if area_a == '3' and type == '3':
                 num_h = '燃料电池'
-                devs = DevControl.objects.filter().values_list('num')
+                devs = DevControl.objects.filter(dev_type=6).values_list('num')
                 for dev in devs:
                     if dev[0] not in nums:
                         num.append(dev[0])
@@ -349,20 +349,21 @@ class DeviceAddView(View):
             # 如果是蓄电池区组级(蓄电池逆变器)
             if area_a == '4' and type == '2':
                 num_h = '蓄电池逆变器'
-                devs = DevControl.objects.filter(dev_type=3).values_list('num')
+                devs = DevControl.objects.filter(dev_type=10).values_list('num')
                 for dev in devs:
                     if dev[0] not in nums:
                         num.append(dev[0])
             # 如果是蓄电池设备(蓄电池)
             if area_a == '4' and type == '3':
-                devs = DevControl.objects.filter(dev_type=4).values_list('num')
+                num_h = '蓄电池'
+                devs = DevControl.objects.filter(dev_type=11).values_list('num')
                 for dev in devs:
                     if dev[0] not in nums:
                         num.append(dev[0])
             # 如果是飞轮区组级(飞轮逆变器)
             if area_a == '5' and type == '2':
                 num_h = '飞轮逆变器'
-                devs = DevControl.objects.filter().values_list('num')
+                devs = DevControl.objects.filter(dev_type=12).values_list('num')
                 for dev in devs:
                     if dev[0] not in nums:
                         num.append(dev[0])
@@ -370,7 +371,7 @@ class DeviceAddView(View):
             # 如果是飞轮设备(飞轮)
             if area_a == '5' and type == '3':
                 num_h = '飞轮'
-                devs = DevControl.objects.filter().values_list('num')
+                devs = DevControl.objects.filter(dev_type=13).values_list('num')
                 for dev in devs:
                     if dev[0] not in nums:
                         num.append(dev[0])
@@ -378,7 +379,7 @@ class DeviceAddView(View):
             # 如果是控制区组级
             if area_a == '6' and type == '2':
                 num_h = '控制区'
-                devs = DevControl.objects.filter(dev_type__in=[5,6,7]).values_list('num')
+                devs = DevControl.objects.filter(dev_type__in=[20,21,22]).values_list('num')
                 for dev in devs:
                     if dev[0] not in nums:
                         num.append(dev[0])

@@ -1,4 +1,6 @@
 # -*- coding:utf8 -*-
+from datetime import datetime
+
 from django.db import models
 
 # Create your models here.
@@ -12,20 +14,28 @@ class DevControl(models.Model):
     DEV_TYPE = (
         (1, '光伏组逆变器'),
         (2, '光伏板'),
-        (3, '蓄电池组逆变器'),
-        (4, '蓄电池'),
-        (5, '高压负荷开关'),
-        (6, '隔离开关'),
-        (7, '断路器')
+        (3, '风力逆变器'),
+        (4, '风机'),
+        (5, '燃料电池逆变器'),
+        (6, '燃料电池'),
+
+        (11, '蓄电池组逆变器'),
+        (12, '蓄电池'),
+        (13, '飞轮逆变器'),
+        (14, '飞轮'),
+
+        (20, '高压负荷开关'),
+        (21, '隔离开关'),
+        (22, '断路器')
     )
     STATUS = (
-        (1, '断开'),
-        (2, '闭合'),
+        (0, '断开'),
+        (1, '闭合'),
     )
     num = models.CharField(max_length=20, unique=True, verbose_name='编号')
     dev_type = models.IntegerField(choices=DEV_TYPE, verbose_name=u'设备类型')
     # 光伏、高压负荷开关、断路器、隔离开关
-    switch_status = models.IntegerField(choices=(STATUS),default=1, blank=True, null=True, verbose_name='开关状态控制')
+    switch_status = models.IntegerField(choices=(STATUS), default=0, blank=True, null=True, verbose_name='开关状态控制')
     # 逆变器设置使用
     active_power = models.FloatField(blank=True, null=True, verbose_name='有功功率设置')
     reactive_power = models.FloatField(blank=True, null=True, verbose_name='无功功率设置')
@@ -54,10 +64,11 @@ class EnvAddressC(models.Model):
 # 数据类存储不进行外键关联，为在设备被移除时可以继续保存(保存时注意保持编号一致)因数据实时性要求不同，分类保存
 # 光伏逆变器模拟量数据1（实时性高数据，数据量大，需定时清除）
 class PVAnalogQuantityData1(models.Model):
-    timestamp = models.DateTimeField(blank=True, null=True, verbose_name='时间戳')
+    timestamp = models.DateTimeField(default=datetime.now, verbose_name='时间戳')
     pv_num = models.CharField(max_length=20, verbose_name='光伏逆变器编号')
     matrix_cur = models.FloatField(blank=True, null=True, verbose_name='阵列电流')
     matrix_volt = models.FloatField(blank=True, null=True, verbose_name='阵列电压')
+    matrix_power_in = models.FloatField(blank=True, null=True, verbose_name='阵列输入功率')
     grid_volt_ab = models.FloatField(blank=True, null=True, verbose_name='电网AB线电压')
     grid_volt_bc = models.FloatField(blank=True, null=True, verbose_name='电网BC线电压')
     grid_volt_ca = models.FloatField(blank=True, null=True, verbose_name='电网CA线电压')
@@ -78,13 +89,11 @@ class PVAnalogQuantityData1(models.Model):
 
 # 光伏逆变器模拟量数据2（常年数据，）
 class PVAnalogQuantityData2(models.Model):
-    timestamp = models.DateTimeField(blank=True, null=True, verbose_name='时间戳')
+    timestamp = models.DateTimeField(default=datetime.now, verbose_name='时间戳')
     pv_num = models.CharField(max_length=20, verbose_name='光伏逆变器编号')
-    matrix_power_in = models.FloatField(blank=True, null=True, verbose_name='阵列输入功率')
     on_grid_p = models.FloatField(blank=True, null=True, verbose_name='并网有功功率')
     on_grid_q = models.FloatField(blank=True, null=True, verbose_name='并网无功功率')
     on_grid_s = models.FloatField(blank=True, null=True, verbose_name='并网视在功率')
-
     inv_cabin_temp = models.FloatField(blank=True, null=True, verbose_name='机柜温度')
     day_gen_power = models.FloatField(blank=True, null=True, verbose_name='日累计发电量')
     day_runtime = models.FloatField(blank=True, null=True, verbose_name='日运行时间')
@@ -102,26 +111,23 @@ class PVAnalogQuantityData2(models.Model):
 
 # 光伏逆变器数字量数据（异常状态）
 class PVDigitalQuantityData(models.Model):
-    PV_STATUS = (
-        (1, '停机'),
-        (2, '待机'),
-        (3, '自检'),
-        (4, '并网'),
-    )
     IS_STATUS =(
-        (1, '是'),
-        (2, '否'),
+        (0, '是'),
+        (1, '否'),
     )
     BUTTON_STATUS = (
-        (1, '启动'),
-        (2, '未启动'),
+        (0, '启动'),
+        (1, '未启动'),
     )
     TESTING_STATUS = (
-        (1, '正常'),
-        (2, '异常'),
+        (0, '正常'),
+        (1, '异常'),
     )
     pv_num = models.CharField(max_length=20, unique=True, verbose_name='光伏逆变器编号')
-    status = models.IntegerField(choices=(PV_STATUS), blank=True, null=True, verbose_name='设备状态')
+    status_down = models.IntegerField(choices=(IS_STATUS), blank=True, null=True, verbose_name='设备状态_停机')
+    status_standby = models.IntegerField(choices=(IS_STATUS), blank=True, null=True, verbose_name='设备状态_待机')
+    status_selftest = models.IntegerField(choices=(IS_STATUS), blank=True, null=True, verbose_name='设备状态_自检')
+    status_ongrid = models.IntegerField(choices=(IS_STATUS), blank=True, null=True, verbose_name='设备状态_并网')
     locking_self = models.IntegerField(choices=(IS_STATUS), blank=True, null=True, verbose_name='闭锁未自锁')
     emergency_stop = models.IntegerField(choices=(BUTTON_STATUS), blank=True, null=True, verbose_name='急停')
     remote_local = models.IntegerField(choices=(IS_STATUS), blank=True, null=True, verbose_name='远程本地')
@@ -151,7 +157,7 @@ class PVDigitalQuantityData(models.Model):
 
 # 地址环境各项参数数据
 class EnvironmentData(models.Model):
-    timestamp = models.DateTimeField(blank=True, null=True, verbose_name=u'时间戳')
+    timestamp = models.DateTimeField(default=datetime.now, verbose_name=u'时间戳')
     env_num = models.CharField(max_length=20, verbose_name='环境地址编号')
     wind_speed = models.FloatField(blank=True, null=True, verbose_name=u'风速(m/s)')
     wind_direct = models.FloatField(blank=True, null=True, verbose_name=u'风向(°)')
