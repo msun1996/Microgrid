@@ -19,6 +19,7 @@ class DevControl(models.Model):
         (5, '燃料电池逆变器'),
         (6, '燃料电池'),
 
+
         (11, '蓄电池组逆变器'),
         (12, '蓄电池'),
         (13, '飞轮逆变器'),
@@ -26,7 +27,9 @@ class DevControl(models.Model):
 
         (20, '高压负荷开关'),
         (21, '隔离开关'),
-        (22, '断路器')
+        (22, '断路器'),
+
+        (30, '负载')
     )
     STATUS = (
         (0, '断开'),
@@ -207,8 +210,9 @@ class WebMicrogrid(models.Model):
         (3, '燃机区'),
         (4, '电池储能区'),
         (5, '飞轮储能区'),
-        (6, '控制区'), # 控制区域包含各类和控制相关设备和开关
-        (7, '环境')
+        (6, '负载区'),
+        (7, '控制区'), # 控制区域包含各类和控制相关设备和开关
+        (8, '环境')
     )
     # 设备名称
     # 保存对应本地设备地址
@@ -231,6 +235,11 @@ class WebMicrogrid(models.Model):
 
     def __str__(self):
         return self.num
+
+
+# class PsoInfo(models.Model):
+#     GridMaxImportPower =
+#     GridMinImportPower =
 
 
 # 图片存储

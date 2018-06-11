@@ -34,7 +34,7 @@
                                             <!-- 三级目录 -->
                                             {% for group in area.2  %}
                                                 <div class="list-group-item " >
-                                                    <a href="{% url 'dev_ask' %}?ask_dev={{ group.0 }}" style="text-decoration: none;color: darkgreen" id="{{ group.0 }}">&nbsp;&nbsp;&nbsp;&nbsp; {{ group.1 }}({{ group.0 }})</a>
+                                                    <a href="{% url 'device' %}?ask_dev={{ group.0 }}" style="text-decoration: none;color: darkgreen" id="{{ group.0 }}">&nbsp;&nbsp;&nbsp;&nbsp; {{ group.1 }}({{ group.0 }})</a>
                                                     <a data-toggle="collapse" href="#collapse{{ group.0 }}" title="收放" style="float: right"><span class="glyphicon glyphicon-resize-vertical">&nbsp;</span></a>
                                                     <a href="{% url 'dev_add' %}?area_a={{ area_a.0 }}&num={{ group.0 }}&type=3" title="添加子项" style="float: right"><span class="glyphicon glyphicon-plus-sign">&nbsp;</span></a>
                                                     <a href="{% url 'dev_del' %}?num={{ group.0 }}" title="删除" style="float: right" onclick="return confirm('确认删除该设备及其子项及控制项?')"><span class="glyphicon glyphicon-minus-sign">&nbsp;</span></a>
@@ -43,7 +43,7 @@
                                                     <!-- 四级目录 -->
                                                     {% for dev in group.2 %}
                                                         <div class="list-group-item">
-                                                            <a href="{% url 'dev_ask' %}?ask_dev={{ dev.0 }}" style="text-decoration: none;" id="{{ dev.0 }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ dev.1 }}({{ dev.0 }})</a>
+                                                            <a href="{% url 'device' %}?ask_dev={{ dev.0 }}" style="text-decoration: none;" id="{{ dev.0 }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ dev.1 }}({{ dev.0 }})</a>
                                                             <a href="{% url 'dev_del' %}?num={{ dev.0 }}" title="删除" style="float: right" onclick="return confirm('确认删除该设备及控制项?')"><span class="glyphicon glyphicon-minus-sign">&nbsp;</span></a>
                                                         </div>
                                                     {% endfor %}
@@ -164,6 +164,17 @@
                 <!-- 蓄电池区 -->
                 <div style="text-align: center;color: white;background-color: lawngreen;height: 30px;margin-bottom: 10px;">
                     <h5 style="line-height: 30px;">蓄电池模型
+                        <a data-toggle="collapse" href="#collapse_ba" style="float: right">
+                            <span class="glyphicon glyphicon-chevron-down">&nbsp;</span>
+                        </a>
+                    </h5>
+                </div>
+                <div id="collapse_ba" class="panel-collapse collapse in" style="text-align: center;">
+
+                </div>
+                <!-- 负载区 -->
+                <div style="text-align: center;color: white;background-color: lawngreen;height: 30px;margin-bottom: 10px;">
+                    <h5 style="line-height: 30px;">负载模型
                         <a data-toggle="collapse" href="#collapse_ba" style="float: right">
                             <span class="glyphicon glyphicon-chevron-down">&nbsp;</span>
                         </a>

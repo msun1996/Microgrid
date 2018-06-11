@@ -1,6 +1,9 @@
 # -*- coding:utf8 -*-
 import datetime
 import json
+# 粒子群算法使用数学库
+import numpy as np
+import random
 
 from django.shortcuts import render,HttpResponse
 from django.http import HttpResponseRedirect
@@ -38,7 +41,7 @@ class DeviceManageView(View):
 
         # 左侧微电网设备管理栏
         # 区域信息(目录一级)
-        message = [[0, '间隔区'],[1, '光伏区'],[2, '风力区'],[3,'燃机区'],[4, '电池储能区'],[5, '飞轮储能区'],[6, '控制区'],[7, '环境']]
+        message = [[0, '间隔区'],[1, '光伏区'],[2, '风力区'],[3,'燃机区'],[4, '电池储能区'],[5, '飞轮储能区'],[6, '负载区'],[7, '控制区'],[8, '环境']]
         # 左侧栏所有信息存储(先存储一级目录信息)
         message_left = message
         # 获取所有子区域(目录二级)
@@ -239,32 +242,45 @@ class DeviceInfoView(View):
         num = request.GET.get('num', '')
         today = datetime.datetime.now().strftime('%Y-%m-%d')
         day = request.GET.get('day', today)
-        print(day)
+        date = request.GET.get('date', 'day')
         day_l = day.split('-')
         # 监控信息获取
         pvI_monitor = PVDigitalQuantityData.objects.get(pv_num=num)
         # 数据信息(最新)
         pvI_data2 = PVAnalogQuantityData2.objects.filter(pv_num=num).order_by('-timestamp').first()
         # 波形显示
-        # 获取对应编号指定日期数据
-        pvI_datas2 = PVAnalogQuantityData2.objects.filter(pv_num=num).filter(timestamp__year=day_l[0],timestamp__month=day_l[1],timestamp__day=day_l[2])
-        # 获取指定日期功率数据
+        # 功率数据
         pvI_on_grid_p_data_l = []
-        pvI_on_grid_p_datas = pvI_datas2.values_list('on_grid_p')
-        for pvI_on_grid_p_data in pvI_on_grid_p_datas:
-            pvI_on_grid_p_data_l.append(pvI_on_grid_p_data[0])
-        times = pvI_datas2.values_list('timestamp')
+        # 时间集
         time_l = []
-        for time in times:
-            time_l.append(time[0].strftime('%H:%M:%S'))
-        print(time_l)
+        if date == 'day':
+            # 获取对应编号指定日期数据
+            pvI_datas2 = PVAnalogQuantityData2.objects.filter(pv_num=num).filter(timestamp__year=day_l[0],timestamp__month=day_l[1],timestamp__day=day_l[2])
+            pvI_on_grid_p_datas = pvI_datas2.values_list('on_grid_p')
+            for pvI_on_grid_p_data in pvI_on_grid_p_datas:
+                pvI_on_grid_p_data_l.append(pvI_on_grid_p_data[0])
+            times = pvI_datas2.values_list('timestamp')
+            for time in times:
+                time_l.append(time[0].strftime('%H:%M:%S'))
+        elif date == 'month':
+            # 获取对应编号日期数据
+            for date_day in range(1, 31):
+                pvI_on_grid_p_datas = PVAnalogQuantityData2.objects.filter(pv_num=num).filter(timestamp__year=day_l[0],timestamp__month=day_l[1],timestamp__day=date_day).values_list('on_grid_p')
+                pvI_on_grid_p_data_day = 0
+                for pvI_on_grid_p_data in pvI_on_grid_p_datas:
+                        pvI_on_grid_p_data_day = pvI_on_grid_p_data_day + pvI_on_grid_p_data[0]
+                pvI_on_grid_p_data_l.append(pvI_on_grid_p_data_day)
+                time_l.append(date_day)
+                print(time_l)
+
         return render(request, 'dev_info.html', {
             'num': num,
             'pvI_monitor': pvI_monitor,
             'pvI_data2': pvI_data2,
             'day': day,
+            'date':date,
             # 光伏逆变器功率数据
-            'pvI_on_grid_p_data_l':json.dumps(pvI_on_grid_p_data_l),
+            'pvI_on_grid_p_data_l': json.dumps(pvI_on_grid_p_data_l),
             'time_l':json.dumps(time_l)
         })
 
@@ -281,9 +297,9 @@ class DeviceAddView(View):
         num_h = ''
         # 如果创建子项的为总区域，即创建子区域
         if pnum == '':
-            num_h = [[0, '间隔子区'], [1, '光伏子区'], [2, '风力子区'], [3, '燃机子区'], [4, '电池储能子区'], [5, '飞轮储能子区'], [6, '控制子区'], [7, '环境子区']][int(area_a)][1]
+            num_h = [[0, '间隔子区'], [1, '光伏子区'], [2, '风力子区'], [3, '燃机子区'], [4, '电池储能子区'], [5, '飞轮储能子区'], [6, '负载子区'],[7, '控制子区'], [8, '环境子区']][int(area_a)][1]
             # 控制区所创建子区会对应产生层或间隔层区域进行控制
-            if area_a == '6':
+            if area_a == '7':
                 nums = []
                 # 控制区所包含的num,即已被控制
                 nums1 = WebMicrogrid.objects.filter(area_type=6).values_list('control_belong_id')
@@ -376,8 +392,16 @@ class DeviceAddView(View):
                     if dev[0] not in nums:
                         num.append(dev[0])
 
-            # 如果是控制区组级
+            # 如果负载
             if area_a == '6' and type == '2':
+                num_h = '负载'
+                devs = DevControl.objects.filter(dev_type=30).values_list('num')
+                for dev in devs:
+                    if dev[0] not in nums:
+                        num.append(dev[0])
+
+            # 如果是控制区组级
+            if area_a == '7' and type == '2':
                 num_h = '控制区'
                 devs = DevControl.objects.filter(dev_type__in=[20,21,22]).values_list('num')
                 for dev in devs:
@@ -385,7 +409,7 @@ class DeviceAddView(View):
                         num.append(dev[0])
 
             # 如果是环境区组
-            if area_a == '7' and type == '2':
+            if area_a == '8' and type == '2':
                 num_h = "环境地址"
                 addrs = EnvAddressC.objects.values_list('env_num')
                 for addr in addrs:
@@ -451,3 +475,223 @@ class DeviceAskView(View):
         dev.save()
 
         return HttpResponseRedirect('/device_manage/?ask_dev={0}'.format(ask_dev))
+
+
+# PSO ；粒子群优化算法
+class PsoView(View):
+    def get(self, request):
+        nav = 4
+
+        microgrid_max = request.GET.get("microgrid_max",300)
+        microgrid_min = request.GET.get("microgrid_min",-300)
+        battary_output = request.GET.get("battary_output",400)
+        battary_input = request.GET.get("battary_input",400)
+
+        # 粒子群优化算法
+        # 预测24小时光伏、负载，电价
+        P_pv = np.array([0,0,0,0,0,0,10,20,40,150,250,200,180,150,150,100,40,20,0,0,0,0,0,0])
+        P_load = np.array([10,12,10,12,14,23,30,60,80,100,120,100,100,140,180,120,60,100,120,120,120,120,80,40])
+        G_price = np.array([0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.4,0.4,0.4])
+
+        # 临时变量
+        # 电池工作状态
+        B = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0])
+        P_bat = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0])
+        fangdian = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0])
+        chongdian = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0])
+
+        # 结果集
+        # 电网向微电网输入输出量
+        pg1 = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0])
+        # 电池存储输入输出量
+        pg2 = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0])
+
+        # 初始化
+        # 允许调节负载范围
+        P_tiao = P_load - P_pv
+        # 电网输入微网最大功率
+        GridMaxImportPower = microgrid_max
+        # 微网输入电网最小功率
+        GridMinImportPower = microgrid_min
+        # 储能最大放电功率
+        StorageMaxDischargingPower = battary_output
+        # 储能最大充电功率
+        StorageMaxChargingPower = battary_input
+        # 最大迭代次数300,5000
+        Max_Dt = 500
+        D = 25  #搜索空间维数（未知数个数）24+1
+        N = 600  #粒子个数600,100
+        w_max = 0.9  #w权重上限
+        w_min = 0.4  #w权重下限
+        v_max = 2.0  #w速度变量上限
+        s = 0  #记录最优值的迭代次数
+        v = np.ones((N, D))
+        x = np.ones((N, D))
+        y = np.ones((N, D))
+        p = np.ones(N)
+
+        def fitness(x):
+            C_GRID = 0  # 取电大电网成本
+            for j in range(0, 24):
+                P_bat[j] = P_load[j] - P_pv[j] - x[j]  # 电池24小时工作情况,P_bat>0(放电)，P_bat<0(充电)
+            cost = 0  # 污染治理成本
+            fa = 0  # 电池深浅冲放引起的寿命成本增加费用
+            chushi = x[24] * 75 / 365  # 铅酸蓄电池日维护费用
+            shouyi = 0  # 大电网卖电收获
+            for j in range(0, 24):
+                if x[j] > 0:  # 充电
+                    C_GRID = C_GRID + G_price[j] * x[j]
+                if x[j] < 0:  # 放电
+                    shouyi = shouyi + 0.6 * x[j]
+            for j in range(0, 24):
+                if x[j] > 0:
+                    cost = cost + (1.2 * (0.002875 + 0.00125) + 0.0024 * 1.25 + 0.002 * 0.875 + 0.00078 * 0.145) * x[j]
+                # print(x)
+            for j in range(0, 24):
+                d = abs(P_bat[j] / x[24])
+                y = d ** 1.7
+                fa = fa + chushi * y
+            result = C_GRID + fa + chushi + shouyi + cost
+            return result
+
+        for i in range(0, N):
+            for j in range(0, D - 1):
+                v[i, j] = random.random()  # 用于生成一个随机浮点数n,0 =< n < 1 #初始化粒子速度变量
+                x[i, j] = GridMinImportPower + random.random() * (GridMaxImportPower - GridMinImportPower)  # 初始化粒子位置
+                # x[i,D-1]=random.random()*1400 #限定初始化电池容量在0-1400
+            x[i, D - 1] = 500  # 限定初始化电池容量在0-1400
+            v[i, D - 1] = random.random()  # 限定初始化电池容量速度变量
+            for j in range(0, D - 1):
+                B[j] = P_load[j] - P_pv[j] - x[i, j]  # 通过功率平衡条件计算出电池工作状态
+                # print(v)
+            # 限定电池工作在上下限内-4
+            for j in range(0, D - 1):
+                if B[j] < -StorageMaxDischargingPower:
+                    x[i, j] = x[i, j] + B[j] + StorageMaxDischargingPower
+                if B[j] > StorageMaxChargingPower:
+                    x[i, j] = x[i, j] + B[j] - StorageMaxChargingPower
+            for j in range(0, D - 1):
+                P_bat[j] = P_load[j] - P_pv[j] - x[i, j]  # 重新计算经过一次约束后的电池工作状态
+            soc = 0  # 设电池初始容量为0，即本身不带前一天的电
+            q = 0
+            # 限定t=1时刻只允许充电，不允许放电
+            if P_bat[0] > 0:
+                x[i, 0] = x[i, 0] + P_bat[0]
+                P_bat[0] = 0
+            for j in range(0, 23):
+                soc = soc - P_bat[j]
+                # 限定不允许充电达到容量上限
+                if soc > x[i, D - 1]:
+                    q = soc - x[i, D - 1]
+                    soc = x[i, D - 1]
+                    P_bat[j] = P_bat[j] + q
+                    x[i, j] = x[i, j] - q
+                    # 限定不允许在容量不足时放电超过目前所拥有电量
+                if P_bat[j + 1] > soc:
+                    h = P_bat[j + 1] - soc
+                    P_bat[j + 1] = soc
+                    x[i, j + 1] = x[i, j + 1] + h
+        # ***************计算各个粒子的适应度，并初始化Pi和Pg****************
+        for i in range(0, N):
+            p[i] = fitness(x[i, :])
+            y[i, :] = x[i, :]  # 每个粒子的个体寻优值
+        Pbest = p[0]
+        # Pg为全局最优
+        pg = x[1, :]
+        for i in range(1, N):
+            if fitness(x[i, :]) < fitness(pg):
+                Pbest = fitness(x[i, :])
+                pg = x[i, :]  # 全局最优更新
+        # ****************************进入主循环*****************************************
+        for t in range(0, Max_Dt):
+            for i in range(0, N):
+                w = w_max - (w_max - w_min) * t / Max_Dt  # 惯性权重更新 0.7
+                c1 = (0.5 - 2.5) * t / Max_Dt + 2.5  # 认知 2.05
+                c2 = (2.5 - 0.5) * t / Max_Dt + 0.5  # 社会认识 2.05
+                v[i, :] = w * v[i, :] + c1 * random.random() * (y[i, :] - x[i, :]) + c2 * random.random() * (
+                            pg - x[i, :])  # 更新后的速度变量
+                for j in range(0, 25):  # 防止寻优速度超过速度上限，如果超过，则限定在速度上限峰值
+                    if v[i, j] > v_max:
+                        v[i, j] = v_max
+                    if v[i, j] < -v_max:
+                        v[i, j] = -v_max
+                x[i, :] = x[i, :] + v[i, :]  # 更新后的粒子位置
+                # ******对粒子边界处理*****************************
+                for n in range(0, 24):
+                    if x[i, n] < GridMinImportPower:  # 防止大电网充放电超过上下限
+                        x[i, n] = GridMinImportPower
+                        v[i, n] = -v[i, n]
+                    if x[i, n] > GridMaxImportPower:
+                        x[i, n] = GridMaxImportPower
+                        v[i, n] = -v[i, n]
+                if x[i, 24] > 2000:  # 限定容量的上限为2000KWH
+                    x[i, 24] = 2000
+                    v[i, 24] = -v[i, 24]
+                if x[i, 24] < 0:  # 限定容量的下限为0KWH
+                    x[i, 24] = 0
+                    v[i, 24] = -v[i, 24]
+                    # 同初始化一样，进行相关的条件约束
+                for j in range(0, D - 1):
+                    P_bat[j] = P_load[j] - P_pv[j] - x[i, j]
+                soc = 0
+                if P_bat[0] > 0:
+                    x[i, 0] = x[i, 0] + P_bat[0]
+                    P_bat[0] = 0
+                for j in range(0, D - 2):
+                    soc = soc - P_bat[j]
+                    if soc > x[i, D - 1]:
+                        q = soc - x[i, D - 1]
+                        soc = x[i, D - 1]
+                        P_bat[j] = P_bat[j] + q
+                        x[i, j] = x[i, j] - q
+                    if P_bat[j + 1] > soc:
+                        h = P_bat[j + 1] - soc
+                        P_bat[j + 1] = soc
+                        x[i, j + 1] = x[i, j + 1] + h
+                    # *********对粒子进行评价，寻找最优值******************
+                PFp = fitness(x[i, :])
+                if PFp < p[i]:
+                    p[i] = PFp
+                    y[i, :] = x[i, :]
+                if p[i] < Pbest:
+                    Pbest = p[i]
+                    pg = y[i, :]
+                    s = t  # 记录目前最优值出现在第几次迭代中
+        C_GRID = 0
+        for i in range(0, D - 1):  # 向大电网取电的费用
+            if pg[i] > 0:
+                C_GRID = C_GRID + G_price[i] * pg[i]
+            if pg[i] < 0:
+                C_GRID = C_GRID + 0.6 * pg[i]
+        chengben = fitness(pg)  # 实际一日综合各种费用的成本
+        for i in range(0, D - 1):
+            pg1[i] = pg[i]
+            pg2[i] = P_load[i] - P_pv[i] - pg[i]
+        for i in range(0, D - 1):
+            if pg2[i] > 0:
+                fangdian[i] = pg2[i] / 220
+            else:
+                fangdian[i] = 0
+        for i in range(0, D - 1):
+            if pg2[i] < 0:
+                chongdian[i] = 220 * 220 / -pg2[i]
+            else:
+                chongdian[i] = float("inf")
+        # 电量差和，越小越好
+        SUM = 0
+        for i in range(0, D - 1):
+            SUM = SUM - (P_load[i] - P_pv[i] - pg[i])
+        microgrid = pg1.tolist()
+        battray = pg2.tolist()
+        return render(request, 'pso.html', {
+            'nav':nav,
+            'microgrid_max': microgrid_max,
+            'microgrid_min': microgrid_min,
+            'battary_output': battary_output,
+            'battary_input': battary_input,
+
+            'microgrid':microgrid,
+            'battray':battray,
+
+        })
+

@@ -51,6 +51,12 @@
                                 <div class="col-sm-3">
                                     <input id="p_day" class="form-control" type="text" name="day" value="{{ day }}"style="text-align: center" onchange="AutoSubmit();">
                                 </div>
+                                <div class="col-sm-3">
+                                    <select name="date" class="form-control" onchange="AutoSubmit()">
+                                        <option value="day" {% if date == 'day'%}selected{% endif %}>日</option>
+                                        <option value="month" {% if date == 'month'%}selected{% endif %}>月</option>
+                                    </select>
+                                </div>
                             </div>
                             <input type="hidden" name="num" value="{{ num }}">
                         </form>
@@ -133,13 +139,13 @@
                             {% if pvI_monitor.status_down == 0 %}
                                 停机
                             {% endif %}
-                            {% if pvI_monitor.status == 0 %}
+                            {% if pvI_monitor.status_ongrid == 0 %}
                                 待机
                             {% endif %}
-                            {% if pvI_monitor.status == 0 %}
+                            {% if pvI_monitor.status_selftest == 0 %}
                                 自检
                             {% endif %}
-                            {% if pvI_monitor.status == 0 %}
+                            {% if pvI_monitor.status_standby == 0 %}
                                 并网
                             {% endif %}
                         </label>

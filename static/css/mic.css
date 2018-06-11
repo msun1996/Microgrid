@@ -109,3 +109,19 @@
     float: right;
     box-shadow: 0 0 5px #1bee57;
 }
+.pso-box1{
+    width: 48%;
+    height: 580px;
+    margin: 0 auto;
+    box-shadow: 0 0 5px #1bee57;
+    overflow-y: scroll;
+    float: left;
+}
+.pso-box2{
+    width: 48%;
+    height: 580px;
+    margin: 0 auto;
+    box-shadow: 0 0 5px #1bee57;
+    overflow-y: scroll;
+    float: right;
+}
