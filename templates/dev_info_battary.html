@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}蓄电池信息{% endblock %}
+{% block custom_css %}
+<link href="{% static 'css/mic.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block custom_js %}
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <!-- 属性信息 -->
+        <div class="dev_info-box1">
+            <div style="text-align: center;color: white;background-color: lightskyblue;height: 40px;margin-bottom: 10px;"><h4 style="line-height: 40px;margin-top: 0px">属性信息</h4></div>
+            <form class="form-horizontal" action="" method="post">
+                <div class="form-group">
+                    <label class="control-label col-sm-6">编号:</label>
+                    <label class="control-label col-sm-2">{{ battaryproperty.battary_num }}</label>
+                    <input type="hidden" value="{{ battaryproperty.battary_num }}" name="num">
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-6">额定容量:</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" value="{{ battaryproperty.rated_capacity }}" name="rated_capacity">
+                    </div>
+                </div>
+                <div>
+                    <div class="col-sm-9"></div>
+                    <button type="submit" class="btn btn-success" onclick="return confirm('确认设置?')">设置</button>
+                </div>
+            </form>
+        </div>
+        <!-- 状态信息 -->
+        <div class="dev_info-box2">
+            <div style="text-align: center;color: white;background-color: lightskyblue;height: 40px;margin-bottom: 10px;"><h4 style="line-height: 40px;margin-top: 0px">状态信息</h4></div>
+            <div style="background-color: whitesmoke">
+                <div class="col-sm-6">
+                    <label class="control-label col-sm-6">蓄电池SOC：</label>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

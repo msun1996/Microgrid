@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic.base import View
 
-from microgrids.models import WebMicrogrid,DevControl,EnvAddressC,Img,PVDigitalQuantityData,PVAnalogQuantityData1,PVAnalogQuantityData2
+from microgrids.models import WebMicrogrid,DevControl,EnvAddressC,Img,PVDigitalQuantityData,PVAnalogQuantityData1,PVAnalogQuantityData2,BattatyProperty
 
 # Create your views here.
 
@@ -32,10 +32,6 @@ class DeviceManageView(View):
     def get(self, request):
         # 获取右侧栏需要显示的对应控制区内容的编号
         ask_dev = request.GET.get('ask_dev', '')
-        try:
-            dev = WebMicrogrid.objects.get(num=ask_dev)
-        except:
-            dev = ''
         # 导航栏选择标志
         nav = 2
 
@@ -77,6 +73,8 @@ class DeviceManageView(View):
         battery_picture = Img.objects.get(name_h='蓄电池组')
         CA_Close_picture = Img.objects.get(name_h='控制区_闭合')
         CA_Open_picture = Img.objects.get(name_h='控制区_断开')
+        load_picture = Img.objects.get(name_h='负荷')
+
 
         # 间隔区
         pcc_model = []
@@ -177,7 +175,7 @@ class DeviceManageView(View):
                     except:
                         pvc = ''
                         pvc_status = ''
-                    # 获取逆变器下所有光伏阵列控制编号和光伏阵列编号及五级容器(备用)
+                    # 获取逆变器下所有光伏阵列或蓄电池控制编号和光伏阵列或蓄电池编号及五级容器(备用)
                     pv_4.append(pvc)
                     pv_4.append(pv[0])
                     pv_4.append([])
@@ -186,10 +184,70 @@ class DeviceManageView(View):
             pv_model.append(pv_2)
         print(pv_model)
 
-        # 右侧栏设备控制管理栏
+        # 负载区
+        load_model = []
+        # 获取负载的所有控制子区
+        las =  WebMicrogrid.objects.order_by('num').filter(area_type=message[6][0],type=1).values_list('num')
+        for la in las:
+            # 创建2级即子区保存数组
+            l_2 = []
+            try:
+                # 获取对应控制区
+                lac = WebMicrogrid.objects.order_by('num').filter(control_belong__num=la[0]).values_list('num')[0][0]
+                # 获取控制区状态
+                lac_sws = WebMicrogrid.objects.filter(parent_area=lac)
+                # 默认闭合
+                lac_status = 1
+                for lac_sw in lac_sws:
+                    lac_sw_status = DevControl.objects.get(num=lac_sw).switch_status
+                    if lac_sw_status == 1:
+                        # 控制区有一个断开，则显示控制区断开
+                        lac_status = 0
+            except:
+                lac = ''
+                lac_status = ''
+            # 追加子区编号和对应控制区编号和三级总容器
+            l_2.append(la[0])
+            l_2.append(lac)
+            l_2.append(lac_status)
+            l_2.append([])
+            # 获取子区下的所有负载
+            ls = WebMicrogrid.objects.order_by('num').filter(parent_area=la[0]).values_list('num')
+            for load in ls:
+                # 创建保存3级即负载数组
+                l_3 = []
+                try:
+                    # 获取逆变器对应控制区(如果逆变器对应无控制区为'')
+                    lc = WebMicrogrid.objects.order_by('num').filter(control_belong__num=load[0]).values_list('num')[0][0]
+                    # 获取控制区状态
+                    lc_sws = WebMicrogrid.objects.filter(parent_area=lc)
+                    # 默认闭合
+                    lc_status = 1
+                    for lc_sw in lc_sws:
+                        lc_sw_status = DevControl.objects.get(num=lc_sw).switch_status
+                        if lc_sw_status == 1:
+                            # 控制区有一个断开，则显示控制区断开
+                            l_status = 0
+                except:
+                    lc = ''
+                    lc_status = ''
+                # 获取逆变器控制编号和逆变器编号及四级总容器
+                l_3.append(lc)
+                l_3.append(load[0])
+                l_3.append(lc_status)
+                l_3.append([])
+                l_2[3].append(l_3)
+            load_model.append(l_2)
+        print(load_model)
+
+        # #################################### 右侧栏设备控制管理栏  #########################
+        try:
+            dev = WebMicrogrid.objects.get(num=ask_dev)
+        except:
+            dev = ''
         # 处于控制区的开关部分处理
         swcs = []
-        if ask_dev != ''and dev.area_type == 6:
+        if ask_dev != ''and dev.area_type == 7:
             # 首位为控制编号
             swcs.append(ask_dev)
             swcs.append([])
@@ -205,25 +263,20 @@ class DeviceManageView(View):
             elif control_obj.type == 2:
                 swc = DevControl.objects.filter(num=control_obj.num).values_list('num', 'switch_status')
                 swcs[1].append(swc)
-        print(swcs)
         # 设备上的参数设定等管理
-        # 光伏设备
-        pvI_set = ''
-        pvI_monitor = ''
-        pvI_data = ''
-        pvI_datas = ''
-        pvI_times = []
-        if ask_dev != '' and dev.area_type == 1:
-            # 光伏逆变器
-            if dev.type == 2:
-                # 参数设定(控制管理区所需参数)
-                pvI_set = DevControl.objects.get(num=ask_dev)
+        dev_c = ''
+        if ask_dev != '' and dev.area_type in [1,2,3,4,5,6]:
+            dev_c = DevControl.objects.get(num=ask_dev)
 
         return render(request, 'device_manage.html', {
             'nav':nav,
+            # 左侧
             'message_left': message_left,
+
+            # 中间信息
             'pcc_model':pcc_model,
             'pv_model':pv_model,
+            'load_model':load_model,
             'big_power_grid_picture': big_power_grid_picture,
             'pvI_picture': pvI_picture,
             'pv_picture': pv_picture,
@@ -231,8 +284,11 @@ class DeviceManageView(View):
             'battery_picture': battery_picture,
             'CA_Close_picture':CA_Close_picture,
             'CA_Open_picture':CA_Open_picture,
+            'load_picture':load_picture,
+
+            # 右侧栏
             'swcs': swcs,
-            'pvI_set': pvI_set,
+            'dev_c': dev_c,
         })
 
 
@@ -240,50 +296,94 @@ class DeviceManageView(View):
 class DeviceInfoView(View):
     def get(self, request):
         num = request.GET.get('num', '')
-        today = datetime.datetime.now().strftime('%Y-%m-%d')
-        day = request.GET.get('day', today)
-        date = request.GET.get('date', 'day')
-        day_l = day.split('-')
-        # 监控信息获取
-        pvI_monitor = PVDigitalQuantityData.objects.get(pv_num=num)
-        # 数据信息(最新)
-        pvI_data2 = PVAnalogQuantityData2.objects.filter(pv_num=num).order_by('-timestamp').first()
-        # 波形显示
-        # 功率数据
-        pvI_on_grid_p_data_l = []
-        # 时间集
-        time_l = []
-        if date == 'day':
-            # 获取对应编号指定日期数据
-            pvI_datas2 = PVAnalogQuantityData2.objects.filter(pv_num=num).filter(timestamp__year=day_l[0],timestamp__month=day_l[1],timestamp__day=day_l[2])
-            pvI_on_grid_p_datas = pvI_datas2.values_list('on_grid_p')
-            for pvI_on_grid_p_data in pvI_on_grid_p_datas:
-                pvI_on_grid_p_data_l.append(pvI_on_grid_p_data[0])
-            times = pvI_datas2.values_list('timestamp')
-            for time in times:
-                time_l.append(time[0].strftime('%H:%M:%S'))
-        elif date == 'month':
-            # 获取对应编号日期数据
-            for date_day in range(1, 31):
-                pvI_on_grid_p_datas = PVAnalogQuantityData2.objects.filter(pv_num=num).filter(timestamp__year=day_l[0],timestamp__month=day_l[1],timestamp__day=date_day).values_list('on_grid_p')
-                pvI_on_grid_p_data_day = 0
+        type = request.GET.get('type','')
+        # 光伏逆变器
+        if type == '1':
+            today = datetime.datetime.now().strftime('%Y-%m-%d')
+            day = request.GET.get('day', today)
+            date = request.GET.get('date', 'day')
+            day_l = day.split('-')
+            # 监控信息获取
+            pvI_monitor = PVDigitalQuantityData.objects.get(pv_num=num)
+            # 数据信息(最新)
+            pvI_data2 = PVAnalogQuantityData2.objects.filter(pv_num=num).order_by('-timestamp').first()
+            # 波形显示
+            # 功率数据
+            pvI_on_grid_p_data_l = []
+            # 时间集
+            time_l = []
+            if date == 'day':
+                # 获取对应编号指定日期数据
+                pvI_datas2 = PVAnalogQuantityData2.objects.filter(pv_num=num).filter(timestamp__year=day_l[0],timestamp__month=day_l[1],timestamp__day=day_l[2])
+                pvI_on_grid_p_datas = pvI_datas2.values_list('on_grid_p')
                 for pvI_on_grid_p_data in pvI_on_grid_p_datas:
-                        pvI_on_grid_p_data_day = pvI_on_grid_p_data_day + pvI_on_grid_p_data[0]
-                pvI_on_grid_p_data_l.append(pvI_on_grid_p_data_day)
-                time_l.append(date_day)
-                print(time_l)
+                    pvI_on_grid_p_data_l.append(pvI_on_grid_p_data[0])
+                times = pvI_datas2.values_list('timestamp')
+                for time in times:
+                    time_l.append(time[0].strftime('%H:%M:%S'))
+            elif date == 'month':
+                # 获取对应编号日期数据
+                for date_day in range(1, 31):
+                    pvI_on_grid_p_datas = PVAnalogQuantityData2.objects.filter(pv_num=num).filter(timestamp__year=day_l[0],timestamp__month=day_l[1],timestamp__day=date_day).values_list('on_grid_p')
+                    pvI_on_grid_p_data_day = 0
+                    for pvI_on_grid_p_data in pvI_on_grid_p_datas:
+                            pvI_on_grid_p_data_day = pvI_on_grid_p_data_day + pvI_on_grid_p_data[0]
+                    pvI_on_grid_p_data_l.append(pvI_on_grid_p_data_day)
+                    time_l.append(date_day)
+                    print(time_l)
+            # 三相电压实时n个数据
+            volt_ab_dates = []
+            volt_bc_dates = []
+            volt_ca_dates = []
+            volt_time_dates = []
+            volt_dates = PVAnalogQuantityData1.objects.filter(pv_num=num).order_by('-id')[:10000]
+            for volt_ab_date in volt_dates.values_list('grid_volt_ab'):
+                volt_ab_dates.insert(0,volt_ab_date[0])
+            for volt_bc_date in volt_dates.values_list('grid_volt_bc'):
+                volt_bc_dates.insert(0,volt_bc_date[0])
+            for volt_ca_date in volt_dates.values_list('grid_volt_ca'):
+                volt_ca_dates.insert(0,volt_ca_date[0])
+            for volt_time_date in volt_dates.values_list('timestamp'):
+                print(time[0])
+                volt_time_dates.insert(0,str(volt_time_date[0]))
 
-        return render(request, 'dev_info.html', {
-            'num': num,
-            'pvI_monitor': pvI_monitor,
-            'pvI_data2': pvI_data2,
-            'day': day,
-            'date':date,
-            # 光伏逆变器功率数据
-            'pvI_on_grid_p_data_l': json.dumps(pvI_on_grid_p_data_l),
-            'time_l':json.dumps(time_l)
-        })
+            return render(request, 'dev_info_pv.html', {
+                'num': num,
+                'pvI_monitor': pvI_monitor,
+                'pvI_data2': pvI_data2,
+                'day': day,
+                'date':date,
+                # 光伏逆变器功率数据
+                'pvI_on_grid_p_data_l': json.dumps(pvI_on_grid_p_data_l),
+                'time_l':json.dumps(time_l),
+                # 光伏三相电压
+                'volt_ab_dates':json.dumps(volt_ab_dates),
+                'volt_bc_dates':json.dumps(volt_bc_dates),
+                'volt_ca_dates':json.dumps(volt_ca_dates),
+                'volt_time_dates':json.dumps(volt_time_dates)
+            })
+        # 蓄电池
+        if type == '12':
+            # 属性信息
+            try:
+                battaryproperty = BattatyProperty.objects.get(battary_num=num)
+            except:
+                battaryproperty = BattatyProperty()
+                battaryproperty.battary_num = num
+                battaryproperty.save()
 
+            # 电池状态信息
+
+            return render(request, 'dev_info_battary.html', {
+                'battaryproperty': battaryproperty
+            })
+        # 负载
+        if type == '30':
+
+
+            return render(request, 'dev_info_load.html', {
+
+            })
 
 # 设备添加
 class DeviceAddView(View):
@@ -302,11 +402,11 @@ class DeviceAddView(View):
             if area_a == '7':
                 nums = []
                 # 控制区所包含的num,即已被控制
-                nums1 = WebMicrogrid.objects.filter(area_type=6).values_list('control_belong_id')
+                nums1 = WebMicrogrid.objects.filter(area_type=7).values_list('control_belong_id')
                 for num1 in nums1:
                     nums.append(num1[0])
                 # 取出产生层、间隔层所有num
-                devs = WebMicrogrid.objects.exclude(area_type__in=[6,7]).order_by('num').values_list('num')
+                devs = WebMicrogrid.objects.exclude(area_type__in=[7,8]).order_by('num').values_list('num')
                 for dev in devs:
                     if dev[0] not in nums:
                         num.append(dev[0])
@@ -324,10 +424,10 @@ class DeviceAddView(View):
                 for dev in devs:
                     if dev[0] not in nums:
                         num.append(dev[0])
-            # 如果是光伏区设备(光伏板)
+            # 如果是光伏区设备(光伏板或蓄电池)
             if area_a == '1' and type == '3':
-                num_h = '光伏板'
-                devs = DevControl.objects.filter(dev_type=2).values_list('num')
+                num_h = '光伏板/蓄电池'
+                devs = DevControl.objects.filter(dev_type__in=[2, 12]).values_list('num')
                 for dev in devs:
                     if dev[0] not in nums:
                         num.append(dev[0])

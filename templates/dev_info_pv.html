@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %}数据和报警信息详情{% endblock %}
+{% block title %}逆变器信息详情{% endblock %}
 {% block custom_css %}
 <link href="{% static 'css/mic.css' %}" rel="stylesheet" type="text/css">
 <link href="{% static 'css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet" xmlns="http://www.w3.org/1999/html">
@@ -125,6 +125,89 @@
                     </script>
                 </div>
             {% endif %}
+            <div style="width: 96%;height: auto;margin: 2%;box-shadow: 0 5px 15px #d4d4d4;">
+                <div id="view_volt" style="width: auto; height: 300px;"></div>
+                <script>
+                    var volt_time_dates ={{ volt_time_dates|safe }}
+                    var volt_ab_dates = {{ volt_ab_dates|safe }};
+                    var volt_bc_dates = {{ volt_bc_dates|safe }};
+                    var volt_ca_dates = {{ volt_ca_dates|safe }};
+                    var viewvoltchart = echarts.init(document.getElementById('view_volt'));
+                    var option = {
+                        //标题
+                        title:{
+                            text: '三相逆变输出电压',
+                            x: 'center'
+                        },
+                        // 提示框组件
+                        tooltip:{
+                            trigger:'axis'
+                        },
+                        // 图类组件
+                        legend:{
+                            bottom:'left',
+                            data:[{
+                                name: 'ab相电压',
+                                icon: 'circle'
+                                },{
+                                name: 'bc相电压',
+                                icon: 'circle'
+                                },{
+                                name: 'ca相电压',
+                                icon: 'circle'
+                                }]
+                        },
+                        xAxis: {
+                            name: '时间',
+                            type: 'category',
+                            data: volt_time_dates
+                        },
+                        yAxis: {
+                            name: '电压/V',
+                            type: 'value'
+                        },
+                        series: [{
+                            name: 'ab相电压',
+                            type: 'line',
+                            itemStyle: {
+                                normal: {
+                                    color: '#d4242c'
+                                }
+                            },
+                            data: volt_ab_dates
+                        }, {
+                            name: 'bc相电压',
+                            type: 'line',
+                            itemStyle: {
+                                normal: {
+                                    color: '#1ad44c'
+                                }
+                            },
+                            data: volt_bc_dates
+                        }, {
+                            name: 'ca相电压',
+                            type: 'line',
+                            itemStyle: {
+                                normal: {
+                                    color: '#1926d4'
+                                }
+                            },
+                            data: volt_ca_dates
+                        },],
+                        //区域缩放
+                        dataZoom: [
+                            {
+                                type: 'slider',
+                                show: true,
+                                start: 99,  //百分之90开始
+                                end: 100,   //百分之100结束
+                            },
+                        ],
+                    };
+
+                    viewvoltchart.setOption(option)
+                </script>
+            </div>
         </div>
         <!-- 报警信息 -->
         <div class="dev_info-box2">

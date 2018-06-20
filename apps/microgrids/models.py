@@ -52,18 +52,7 @@ class DevControl(models.Model):
         return self.num
 
 
-# 环境地址
-class EnvAddressC(models.Model):
-    env_num = models.CharField(max_length=20, unique=True, verbose_name='环境地址编号')
-
-    class Meta:
-        verbose_name = u'环境地址'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.env_num
-
-
+# 以下数据为一些设备附带的显示属性
 # 数据类存储不进行外键关联，为在设备被移除时可以继续保存(保存时注意保持编号一致)因数据实时性要求不同，分类保存
 # 光伏逆变器模拟量数据1（实时性高数据，数据量大，需定时清除）
 class PVAnalogQuantityData1(models.Model):
@@ -90,7 +79,7 @@ class PVAnalogQuantityData1(models.Model):
         return self.timestamp
 
 
-# 光伏逆变器模拟量数据2（常年数据，）
+# 光伏逆变器模拟量数据2（常年数据，定时保存）
 class PVAnalogQuantityData2(models.Model):
     timestamp = models.DateTimeField(default=datetime.now, verbose_name='时间戳')
     pv_num = models.CharField(max_length=20, verbose_name='光伏逆变器编号')
@@ -158,6 +147,60 @@ class PVDigitalQuantityData(models.Model):
         return self.pv_num
 
 
+# 电池属性
+class BattatyProperty(models.Model):
+    battary_num = models.CharField(max_length=20, unique=True, verbose_name='电池编号')
+    rated_capacity = models.FloatField(blank=True, null=True, verbose_name='电池额定电量')
+
+    class Meta:
+        verbose_name = u'蓄电池属性'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.battary_num
+
+
+# 电池数据
+class BattaryData(models.Model):
+    timestamp = models.DateTimeField(default=datetime.now, verbose_name='时间戳')
+    battary_num = models.CharField(max_length=20, unique=True, verbose_name='电池编号')
+    soc = models.FloatField(blank=True, null=True, verbose_name='电池剩余电量')
+
+    class Meta:
+        verbose_name = u'蓄电池数据'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.battary_num
+
+
+# 负载数据
+class LoadData(models.Model):
+    timestamp = models.DateTimeField(default=datetime.now, verbose_name='时间戳')
+    load_num = models.CharField(max_length=20, unique=True, verbose_name='负载编号')
+    load_p = models.FloatField(blank=True, null=True, verbose_name='有功功率')
+    load_q = models.FloatField(blank=True, null=True, verbose_name='无功功率')
+
+    class Meta:
+        verbose_name = u'负载值'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.load_num
+
+
+# 环境地址
+class EnvAddressC(models.Model):
+    env_num = models.CharField(max_length=20, unique=True, verbose_name='环境地址编号')
+
+    class Meta:
+        verbose_name = u'环境地址'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.env_num
+
+
 # 地址环境各项参数数据
 class EnvironmentData(models.Model):
     timestamp = models.DateTimeField(default=datetime.now, verbose_name=u'时间戳')
@@ -194,6 +237,7 @@ class EnvironmentData(models.Model):
         return self.timestamp
 
 
+# ##########################Web逻辑管理区#######################################
 # 微电网设备web管理（区域/设备/元件管理）(重构)
 class WebMicrogrid(models.Model):
     # 分级
@@ -235,11 +279,6 @@ class WebMicrogrid(models.Model):
 
     def __str__(self):
         return self.num
-
-
-# class PsoInfo(models.Model):
-#     GridMaxImportPower =
-#     GridMinImportPower =
 
 
 # 图片存储

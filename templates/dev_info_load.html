@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}负载信息{% endblock %}
+{% block custom_css %}
+<link href="{% static 'css/mic.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block custom_js %}
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <!-- 属性信息 -->
+        <div class="dev_info-box1">
+            <div style="text-align: center;color: white;background-color: lightskyblue;height: 40px;margin-bottom: 10px;"><h4 style="line-height: 40px;margin-top: 0px">属性信息</h4></div>
+        </div>
+        <!-- 状态信息 -->
+        <div class="dev_info-box2">
+            <div style="text-align: center;color: white;background-color: lightskyblue;height: 40px;margin-bottom: 10px;"><h4 style="line-height: 40px;margin-top: 0px">状态信息</h4></div>
+            <div class="col-sm-12">
+                <label class="control-label col-sm-3">有功功率：</label>
+                <label class="control-label col-sm-3"></label>
+                <label class="control-label col-sm-3">无功功率：</label>
+                <label class="control-label col-sm-3"></label>
+            </div>
+        </div>
+    </div>
+{% endblock %}

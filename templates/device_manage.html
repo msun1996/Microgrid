@@ -66,7 +66,7 @@
                     <h6>大电网</h6>
                     <div style="text-align: center;">
                         {% for pcca in pcc_model %}
-                            <div style="text-align: center;float: left;margin-left: 20px">
+                            <div style="text-align: center;margin-left: 20px">
                                 {% if pcca.1 != '' %}
                                     <a href="{% url 'device' %}?ask_dev={{ pcca.1 }}" style="text-decoration: none;">
                                         {% if pcca.2 == 1 %}
@@ -147,7 +147,12 @@
                                                     </div>
                                                     <div style="text-align: center"><!-- 四级区具体设备 -->
                                                         <a href="{% url 'device' %}?ask_dev={{ pv.1 }}" style="text-decoration: none">
-                                                            <img src="{{ pv_picture.img.url }}" style="width: 40px;height: 40px">
+                                                            <!-- 根据编号长度判断为光伏阵列或电池 -->
+                                                            {% if pv.1|length == 8 %}
+                                                                <img src="{{ pv_picture.img.url }}" style="width: 40px;height: 40px">
+                                                            {% else %}
+                                                                <img src="{{ battery_picture.img.url }}" style="width: 40px; height: 40px">
+                                                            {% endif %}
                                                             <p >{{ pv.1 }}</p>
                                                         </a>
                                                     </div>
@@ -161,17 +166,14 @@
                     {% endfor %}
                 </div>
                 <div style="clear: left"></div>
-                <!-- 蓄电池区 -->
+                <!-- 蓄电池区
                 <div style="text-align: center;color: white;background-color: lawngreen;height: 30px;margin-bottom: 10px;">
                     <h5 style="line-height: 30px;">蓄电池模型
                         <a data-toggle="collapse" href="#collapse_ba" style="float: right">
                             <span class="glyphicon glyphicon-chevron-down">&nbsp;</span>
                         </a>
                     </h5>
-                </div>
-                <div id="collapse_ba" class="panel-collapse collapse in" style="text-align: center;">
-
-                </div>
+                </div>  -->
                 <!-- 负载区 -->
                 <div style="text-align: center;color: white;background-color: lawngreen;height: 30px;margin-bottom: 10px;">
                     <h5 style="line-height: 30px;">负载模型
@@ -181,7 +183,50 @@
                     </h5>
                 </div>
                 <div id="collapse_ba" class="panel-collapse collapse in" style="text-align: center;">
-
+                    <div id="collapse_ba" class="panel-collapse collapse in" style="text-align: center;">
+                        {% for la in load_model %}
+                            <div style="text-align: center;float: left;border: 1px grey dotted; "> <!-- 二级区 -->
+                                <div style="text-align: center;color: white;background-color: lightskyblue;height: 20px;margin-bottom: 10px;"><h6 style="line-height: 20px;margin-top: 0px">{{ la.0 }}</h6></div>
+                                <div style="text-align: center"><!-- 二级区控制 -->
+                                    {% if la.1 != '' %}
+                                        <a href="{% url 'device' %}?ask_dev={{ la.1 }}" style="text-decoration: none">
+                                            {% if la.2 == 1 %}
+                                                <img src="{{ CA_Open_picture.img.url }}" style="width: 30px;height: 30px">
+                                            {% else %}
+                                                <img src="{{ CA_Close_picture.img.url }}" style="width: 30px;height: 30px">
+                                            {% endif %}
+                                            <p>{{ la.1 }}</p>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                <div style="text-align: center;"><!-- 二级区所有设备 -->
+                                    {% for load in la.3 %}
+                                        <!-- 三级区 -->
+                                        <div style="text-align: center;float: left">
+                                            <div style="text-align: center"><!-- 三级区控制 -->
+                                                {% if load.0 != '' %}
+                                                    <a href="{% url 'device' %}?ask_dev={{ load.0 }}" style="text-decoration: none">
+                                                        {% if load.2 == 1 %}
+                                                            <img src="{{ CA_Open_picture.img.url }}" style="width: 30px;height: 30px">
+                                                        {% else %}
+                                                            <img src="{{ CA_Close_picture.img.url }}" style="width: 30px;height: 30px">
+                                                        {% endif %}
+                                                        <p >{{ load.0 }}</p>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                            <div style="text-align: center"><!-- 三级区设备 -->
+                                                <a href="{% url 'device' %}?ask_dev={{ load.1 }}" style="text-decoration: none">
+                                                    <img src="{{ load_picture.img.url }}" style="width: 100px;height: 100px">
+                                                    <p >{{ load.1 }}</p>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -210,50 +255,52 @@
                         </form>
                     {% endfor %}
                     <!-- 针对设备控制设置 -->
-                    <!-- 光伏逆变器 -->
-                    {% if pvI_set != '' %}
-                        <form class="form-horizontal" action="{% url 'dev_ask' %}" method="post">
-                            {% csrf_token %}
+                    <form class="form-horizontal" action="{% url 'dev_ask' %}" method="post">
+                        {% csrf_token %}
+                        {% if dev_c != '' %}
                             <div class="form-group">
                                 <label class="control-label col-sm-6">编号:</label>
-                                <label class="control-label col-sm-3">{{ pvI_set.num }}</label>
-                                <input type="hidden" value="{{ pvI_set.num }}" name="num">
+                                <label class="control-label col-sm-3">{{ dev_c.num }}</label>
+                                <input type="hidden" value="{{ dev_c.num }}" name="num">
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-6">状态控制:</label>
                                 <div class="col-sm-4">
                                     <select class="form-control col-sm-4" name="switch_status">
-                                        <option value="0" {% if pvI_set.switch_status == 0 %}selected{% endif %}>断开</option>
-                                        <option value="1" {% if pvI_set.switch_status == 1 %}selected{% endif %}>闭合</option>
+                                        <option value="0" {% if dev_c.switch_status == 0 %}selected{% endif %}>断开</option>
+                                        <option value="1" {% if dev_c.switch_status == 1 %}selected{% endif %}>闭合</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-6">有功功率设置:</label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" value="{{ pvI_set.active_power }}" name="active_power">
+                            <!-- 针对光伏逆变器的参数 -->
+                            {% if dev_c.dev_type == 1 %}
+                                <div class="form-group">
+                                    <label class="control-label col-sm-6">有功功率设置:</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" value="{{ dev_c.active_power }}" name="active_power">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-6">无功功率设置:</label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" value="{{ pvI_set.active_power }}" name="reactive_power">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-6">无功功率设置:</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" value="{{ dev_c.active_power }}" name="reactive_power">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-6">功率因素设置:</label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" value="{{ pvI_set.active_power }}" name="powerfactor">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-6">功率因素设置:</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" value="{{ dev_c.active_power }}" name="powerfactor">
+                                    </div>
                                 </div>
-                            </div>
-                            <input type="hidden" value="{{ pvI_set.num }}" name="ask_dev">
-                            <div>
-                                <div class="col-sm-7"></div>
-                                <button type="submit" class="btn btn-success" onclick="return confirm('确认设置?')">设置</button>
-                                <a href="{% url 'dev_info' %}?num={{ pvI_set.num }}" class="btn bg-info" role="button">设备信息</a>
-                            </div>
-                        </form>
-                    {% endif %}
+                            {% endif %}
+                                <input type="hidden" value="{{ dev_c.num }}" name="ask_dev">
+                                <div>
+                                    <div class="col-sm-7"></div>
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('确认设置?')">设置</button>
+                                    <a href="{% url 'dev_info' %}?num={{ dev_c.num }}&&type={{ dev_c.dev_type }}" class="btn bg-info" role="button">设备信息</a>
+                                </div>
+                        {% endif %}
+                    </form>
                 </div>
             </div>
         </div>

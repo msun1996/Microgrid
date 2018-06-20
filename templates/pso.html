@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}优化管理{% endblock %}
+{% block custom_css %}
+    <link href="{% static 'css/mic.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block custom_js %}
+    <script src="https://cdn.bootcss.com/echarts/3.8.5/echarts.js"></script>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="pso-box1">
+            <div style="text-align: center;color: white;background-color: lightskyblue;height: 40px;margin-bottom: 10px;">
+                <h4 style="line-height: 40px;margin-top: 0px">PSO优化相关参数设置</h4>
+            </div>
+            <form class="form-horizontal col-sm-12" action="{% url 'login' %}" method="get">
+            {% csrf_token %}
+                <div class="form-group" >
+                    <label class="col-sm-6 control-label">电网输入微网最大功率:</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="username" name="microgrid_max" value="{{ microgrid_max }}">
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <label class="col-sm-6 control-label">电网输入微网最小功率:</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="username" name="microgrid_min" value="{{ microgrid_min }}">
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <label class="col-sm-6 control-label">储能最大放电功率:</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="username" name="battary_output" value="{{ battary_output }}">
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <label class="col-sm-6 control-label">储能最大充电功率:</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="username" name="battary_input" value="{{ battary_input }}">
+                    </div>
+                </div>
+                <div>
+                    <div class="col-sm-7"></div>
+                    <button type="submit" class="btn btn-success" onclick="return confirm('确认设置?')">设置</button>
+                </div>
+            </form>
+        </div>
+        <div class="pso-box2">
+            <div style="text-align: center;color: white;background-color: lightskyblue;height: 40px;margin-bottom: 10px;">
+                <h4 style="line-height: 40px;margin-top: 0" >PSO优化结果输出</h4>
+                <div id="pso" style="width: auto; height: 300px;border: grey 1px solid"></div>
+                <script>
+                    var times = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
+                    var microgrid = {{ microgrid|safe }};
+                    var battary = {{ battray|safe }};
+                    var psochart = echarts.init(document.getElementById('pso'));
+                    var option = {
+                            //标题
+                            title:{
+                                text: '功率',
+                                x: 'center'
+                            },
+                            // 提示框组件
+                            tooltip:{
+                                trigger:'axis'
+                            },
+                            // 图类组件
+                            legend:{
+                                bottom:'left',
+                                data:[{
+                                    name: '电网向微电网输入输出功率',
+                                    icon: 'circle'
+                                    },{
+                                    name: '电池输入输出功率',
+                                    icon: 'circle'
+                                    }]
+                            },
+                            xAxis: {
+                                name: '时间',
+                                type: 'category',
+                                data: times
+                            },
+                            yAxis: {
+                                name: '功率/kw',
+                                type: 'value'
+                            },
+                            series: [{
+                                    name: '电网向微电网输入输出功率',
+                                    type: 'line',
+                                    itemStyle: {
+                                        normal: {
+                                            color: '#1ad44c'
+                                        },
+                                    },
+                                    data: microgrid
+                                },{
+                                    name: '电池输入输出功率',
+                                    type: 'line',
+                                    itemStyle: {
+                                        normal: {
+                                            color: '#2dd4d2'
+                                        },
+                                    },
+                                    data: battary
+                                }]
+                        };
+                        psochart.setOption(option)
+                </script>
+            </div>
+        </div>
+    </div>
+{% endblock %}

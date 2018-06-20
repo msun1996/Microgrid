@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f2f3a0a6-ecf4-4c8d-9054-6530fb67b32f" name="Default" comment="iec104对接修改">
+    <list default="true" id="f2f3a0a6-ecf4-4c8d-9054-6530fb67b32f" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/apps/microgrids/migrations/0002_auto_20180620_1136.py" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/apps/microgrids/migrations/0003_auto_20180620_1901.py" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/templates/dev_info_load.html" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/Microgrid/urls.py" afterPath="$PROJECT_DIR$/Microgrid/urls.py" />
+      <change beforePath="$PROJECT_DIR$/Web设备管理界面.png" afterPath="" />
       <change beforePath="$PROJECT_DIR$/apps/microgrids/models.py" afterPath="$PROJECT_DIR$/apps/microgrids/models.py" />
       <change beforePath="$PROJECT_DIR$/apps/microgrids/views.py" afterPath="$PROJECT_DIR$/apps/microgrids/views.py" />
-      <change beforePath="$PROJECT_DIR$/static/css/mic.css" afterPath="$PROJECT_DIR$/static/css/mic.css" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" afterPath="$PROJECT_DIR$/templates/base.html" />
-      <change beforePath="$PROJECT_DIR$/templates/dev_add.html" afterPath="$PROJECT_DIR$/templates/dev_add.html" />
-      <change beforePath="$PROJECT_DIR$/templates/dev_info.html" afterPath="$PROJECT_DIR$/templates/dev_info.html" />
+      <change beforePath="$PROJECT_DIR$/templates/dev_info.html" afterPath="$PROJECT_DIR$/templates/dev_info_pv.html" />
       <change beforePath="$PROJECT_DIR$/templates/device_manage.html" afterPath="$PROJECT_DIR$/templates/device_manage.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,31 +38,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/base.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1650">
-              <caret line="55" column="26" lean-forward="false" selection-start-line="55" selection-start-column="26" selection-end-line="55" selection-end-column="29" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/microgrids/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7110">
-              <caret line="239" column="0" lean-forward="false" selection-start-line="239" selection-start-column="2" selection-end-line="241" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/microgrids/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
-              <caret line="484" column="60" lean-forward="false" selection-start-line="484" selection-start-column="60" selection-end-line="484" selection-end-column="60" />
+            <state relative-caret-position="30">
+              <caret line="382" column="0" lean-forward="false" selection-start-line="382" selection-start-column="0" selection-end-line="382" selection-end-column="0" />
               <folding>
                 <element signature="e#22#37#0" expanded="true" />
               </folding>
@@ -70,11 +50,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pso.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/pso.html">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/apps/microgrids/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1140">
-              <caret line="38" column="122" lean-forward="false" selection-start-line="38" selection-start-column="122" selection-end-line="38" selection-end-column="122" />
+            <state relative-caret-position="60">
+              <caret line="182" column="0" lean-forward="true" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -111,6 +91,10 @@
       <find>2</find>
       <find>1</find>
       <find>0</find>
+      <find>pva</find>
+      <find>swcs</find>
+      <find>load_picture</find>
+      <find>pvI</find>
     </findStrings>
     <replaceStrings>
       <replace>type</replace>
@@ -132,6 +116,8 @@
       <replace>1</replace>
       <replace>0</replace>
       <replace>0.0</replace>
+      <replace>la</replace>
+      <replace>load</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -166,16 +152,19 @@
         <option value="$PROJECT_DIR$/static/css/bootstrap.min.css" />
         <option value="$PROJECT_DIR$/templates/overview.html" />
         <option value="$PROJECT_DIR$/apps/microgrids/adminx.py" />
-        <option value="$PROJECT_DIR$/templates/dev_info.html" />
         <option value="$PROJECT_DIR$/templates/dev_add.html" />
         <option value="$PROJECT_DIR$/templates/base.html" />
         <option value="$PROJECT_DIR$/Microgrid/urls.py" />
         <option value="$PROJECT_DIR$/templates/login.html" />
         <option value="$PROJECT_DIR$/static/css/mic.css" />
-        <option value="$PROJECT_DIR$/templates/device_manage.html" />
-        <option value="$PROJECT_DIR$/apps/microgrids/models.py" />
         <option value="$PROJECT_DIR$/templates/pso.html" />
+        <option value="$PROJECT_DIR$/templates/dev_info.html" />
+        <option value="$PROJECT_DIR$/templates/device_manage.html" />
+        <option value="$PROJECT_DIR$/templates/dev_info_pv.html" />
+        <option value="$PROJECT_DIR$/apps/microgrids/models.py" />
+        <option value="$PROJECT_DIR$/templates/dev_info_battary.html" />
         <option value="$PROJECT_DIR$/apps/microgrids/views.py" />
+        <option value="$PROJECT_DIR$/templates/dev_info_load.html" />
       </list>
     </option>
   </component>
@@ -206,7 +195,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -218,18 +206,30 @@
             <path>
               <item name="Microgrid" type="b2602c69:ProjectViewProjectNode" />
               <item name="Microgrid" type="462c0819:PsiDirectoryNode" />
+              <item name="apps" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Microgrid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Microgrid" type="462c0819:PsiDirectoryNode" />
+              <item name="apps" type="462c0819:PsiDirectoryNode" />
+              <item name="microgrids" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Microgrid" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Microgrid" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../EMS_PSO_python" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="list.type.of.created.stylesheet" value="PLAIN_TEXT" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -334,7 +334,14 @@
       <option name="project" value="LOCAL" />
       <updated>1527044967556</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="访问安全机制添加和粒子群算法嵌入">
+      <created>1528704120193</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1528704120193</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -345,9 +352,9 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3071038" sideWeight="0.26510417" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12786885" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27759197" sideWeight="0.7348958" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.114754096" sideWeight="0.7348958" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0421875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15104167" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -358,9 +365,10 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32896176" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="manage.py@Microgrid" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42809364" sideWeight="0.7973958" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="manage.py@Microgrid" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16945374" sideWeight="0.7973958" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -398,7 +406,8 @@
     <MESSAGE value="主要框架内容搭建完成" />
     <MESSAGE value="iec104对接修改" />
     <MESSAGE value="项目说明图片" />
-    <option name="LAST_COMMIT_MESSAGE" value="项目说明图片" />
+    <MESSAGE value="访问安全机制添加和粒子群算法嵌入" />
+    <option name="LAST_COMMIT_MESSAGE" value="访问安全机制添加和粒子群算法嵌入" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -407,10 +416,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/templates/vsg.html" />
-    <entry file="file://$PROJECT_DIR$/templates/env_base.html" />
-    <entry file="file://$PROJECT_DIR$/templates/env_data.html" />
-    <entry file="file://$PROJECT_DIR$/templates/mail_alarm.html" />
     <entry file="file://$PROJECT_DIR$/templates/pv_data.html" />
     <entry file="file://$PROJECT_DIR$/templates/pv_monitor.html" />
     <entry file="file://$PROJECT_DIR$/templates/pv_command.html" />
@@ -622,20 +627,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Microgrid/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="41" column="63" lean-forward="false" selection-start-line="41" selection-start-column="63" selection-end-line="41" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Microgrid/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="5" column="38" lean-forward="true" selection-start-line="5" selection-start-column="38" selection-end-line="5" selection-end-column="38" />
-          <folding>
-            <element signature="e#311#320#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -653,51 +648,123 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/pso.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1140">
+          <caret line="38" column="122" lean-forward="false" selection-start-line="38" selection-start-column="122" selection-end-line="38" selection-end-column="122" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/templates/base.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1650">
+        <state relative-caret-position="16">
           <caret line="55" column="26" lean-forward="false" selection-start-line="55" selection-start-column="26" selection-end-line="55" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Python36/Lib/json/encoder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="179" column="45" lean-forward="true" selection-start-line="179" selection-start-column="45" selection-end-line="179" selection-end-column="45" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/device_manage.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="5" column="14" lean-forward="false" selection-start-line="5" selection-start-column="14" selection-end-line="5" selection-end-column="14" />
+        <state relative-caret-position="226">
+          <caret line="289" column="75" lean-forward="false" selection-start-line="289" selection-start-column="75" selection-end-line="289" selection-end-column="75" />
+          <folding>
+            <element signature="e#5782#5826#0#HTML" expanded="false" />
+            <element signature="e#5968#5998#0#HTML" expanded="false" />
+            <element signature="e#6146#6178#0#HTML" expanded="false" />
+            <element signature="e#6317#6349#0#HTML" expanded="false" />
+            <element signature="e#6691#6710#0#HTML" expanded="false" />
+            <element signature="e#11747#11773#0#HTML" expanded="false" />
+            <element signature="e#11895#11924#0#HTML" expanded="false" />
+            <element signature="e#12198#12230#0#HTML" expanded="false" />
+            <element signature="e#12408#12441#0#HTML" expanded="false" />
+            <element signature="e#13978#13984#1#HTML" expanded="false" />
+            <element signature="e#14249#14276#0#HTML" expanded="false" />
+            <element signature="e#14362#14426#0#HTML" expanded="false" />
+            <element signature="e#14478#14582#0#HTML" expanded="false" />
+            <element signature="e#14587#14628#0#HTML" expanded="false" />
+            <element signature="e#14688#14714#0#HTML" expanded="false" />
+            <element signature="e#14874#14903#0#HTML" expanded="false" />
+            <element signature="e#15057#15089#0#HTML" expanded="false" />
+            <element signature="e#15236#15268#0#HTML" expanded="false" />
+            <element signature="e#15557#15584#0#HTML" expanded="false" />
+            <element signature="e#15759#15797#0#HTML" expanded="false" />
+            <element signature="e#15848#15874#0#HTML" expanded="false" />
+            <element signature="e#16062#16091#0#HTML" expanded="false" />
+            <element signature="e#16271#16303#0#HTML" expanded="false" />
+            <element signature="e#16474#16506#0#HTML" expanded="false" />
+            <element signature="e#16870#16896#0#HTML" expanded="false" />
+            <element signature="e#17010#17039#0#HTML" expanded="false" />
+            <element signature="e#17131#17165#0#HTML" expanded="false" />
+            <marker date="1529489446330" expanded="false" signature="13185:13278" ph="..." />
+            <marker date="1529489446330" expanded="false" signature="13312:13330" ph="..." />
+            <marker date="1529489446330" expanded="false" signature="13415:13427" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/dev_info.html">
+    <entry file="file://D:/Python36/Lib/site-packages/django/db/backends/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-360">
-          <caret line="84" column="76" lean-forward="false" selection-start-line="84" selection-start-column="62" selection-end-line="84" selection-end-column="76" />
+        <state relative-caret-position="197">
+          <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/microgrids/models.py">
+    <entry file="file://$PROJECT_DIR$/Microgrid/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7110">
-          <caret line="239" column="0" lean-forward="false" selection-start-line="239" selection-start-column="2" selection-end-line="241" selection-end-column="26" />
+        <state relative-caret-position="720">
+          <caret line="31" column="48" lean-forward="false" selection-start-line="31" selection-start-column="48" selection-end-line="31" selection-end-column="48" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/pso.html">
+    <entry file="file://$PROJECT_DIR$/templates/dev_info_pv.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1140">
-          <caret line="38" column="122" lean-forward="false" selection-start-line="38" selection-start-column="122" selection-end-line="38" selection-end-column="122" />
+        <state relative-caret-position="7050">
+          <caret line="235" column="42" lean-forward="false" selection-start-line="235" selection-start-column="20" selection-end-line="235" selection-end-column="42" />
+          <folding>
+            <element signature="e#10195#10231#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/dev_info_battary.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="37" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/dev_info_load.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="601">
+          <caret line="21" column="54" lean-forward="false" selection-start-line="21" selection-start-column="54" selection-end-line="21" selection-end-column="54" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/microgrids/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="484" column="60" lean-forward="false" selection-start-line="484" selection-start-column="60" selection-end-line="484" selection-end-column="60" />
+        <state relative-caret-position="30">
+          <caret line="382" column="0" lean-forward="false" selection-start-line="382" selection-start-column="0" selection-end-line="382" selection-end-column="0" />
           <folding>
             <element signature="e#22#37#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/microgrids/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="182" column="0" lean-forward="true" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
