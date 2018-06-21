@@ -20,7 +20,7 @@ from django.views.static import serve
 from django.contrib.auth.decorators import login_required
 
 from users.views import LoginView, LogoutView
-from microgrids.views import OverviewView,DeviceManageView,DeviceAddView,DeviceDelView,DeviceAskView,DeviceInfoView,PsoView
+from microgrids.views import OverviewView,DeviceManageView,DeviceAddView,DeviceDelView,DeviceAskView,DeviceInfoView,BattaryPropertyView,PsoView
 
 urlpatterns = [
     url(r'^$', LoginView.as_view()),
@@ -37,7 +37,8 @@ urlpatterns = [
     url(r'^dev_ask/$', login_required(DeviceAskView.as_view()), name='dev_ask'),
     # 设备详情(波形和报警信息)
     url(r'^dev_info/$', login_required(DeviceInfoView.as_view()), name='dev_info'),
-
+    # 电池设定
+    url(r'^bat_set/$', login_required(BattaryPropertyView.as_view()), name='bat_set'),
     # PSO优化管理界面
     url(r'^pso/$', login_required(PsoView.as_view()), name='pso'),
 

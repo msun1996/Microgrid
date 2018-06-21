@@ -344,11 +344,11 @@ class DeviceInfoView(View):
             for volt_ca_date in volt_dates.values_list('grid_volt_ca'):
                 volt_ca_dates.insert(0,volt_ca_date[0])
             for volt_time_date in volt_dates.values_list('timestamp'):
-                print(time[0])
                 volt_time_dates.insert(0,str(volt_time_date[0]))
 
             return render(request, 'dev_info_pv.html', {
                 'num': num,
+                'type': type,
                 'pvI_monitor': pvI_monitor,
                 'pvI_data2': pvI_data2,
                 'day': day,
@@ -384,6 +384,7 @@ class DeviceInfoView(View):
             return render(request, 'dev_info_load.html', {
 
             })
+
 
 # 设备添加
 class DeviceAddView(View):
@@ -576,6 +577,17 @@ class DeviceAskView(View):
 
         return HttpResponseRedirect('/device_manage/?ask_dev={0}'.format(ask_dev))
 
+
+# 电池属性
+class BattaryPropertyView(View):
+    def post(self, request):
+        num = request.POST.get("num","")
+        rated_capacity = request.POST.get("rated_capacity","")
+
+        battaryproperty = BattatyProperty.objects.get(battary_num=num)
+        battaryproperty.rated_capacity = rated_capacity
+        battaryproperty.save()
+        return HttpResponseRedirect('/dev_info/?num={0}&&type={1}'.format(num,12))
 
 # PSO ；粒子群优化算法
 class PsoView(View):

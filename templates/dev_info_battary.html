@@ -11,7 +11,8 @@
         <!-- 属性信息 -->
         <div class="dev_info-box1">
             <div style="text-align: center;color: white;background-color: lightskyblue;height: 40px;margin-bottom: 10px;"><h4 style="line-height: 40px;margin-top: 0px">属性信息</h4></div>
-            <form class="form-horizontal" action="" method="post">
+            <form class="form-horizontal" action="{% url 'bat_set' %}" method="post">
+                {% csrf_token %}
                 <div class="form-group">
                     <label class="control-label col-sm-6">编号:</label>
                     <label class="control-label col-sm-2">{{ battaryproperty.battary_num }}</label>
